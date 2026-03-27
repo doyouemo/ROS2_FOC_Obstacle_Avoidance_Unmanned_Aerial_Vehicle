@@ -1,21 +1,3 @@
-/* USER CODE BEGIN Header */
-/**
-  ******************************************************************************
-  * @file    AS5600.h
-  * @brief   This file contains all the function prototypes for
-  *          the AS5600.c file
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2026 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
 /* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
@@ -28,18 +10,22 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "i2c.h"
 /* USER CODE END Includes */
 
 /* USER CODE BEGIN Private defines */
 
 #define AS5600_I2C_ADDR         0x36
+#define AS5600_ANGLE_REG_H     0x0E
+#define AS5600_ANGLE_REG_L     0x0F
 
 /* USER CODE END Private defines */
 
 /* USER CODE BEGIN FunctionPrototypes */
 
-uint16_t AS5600_GetAngle(void);
+uint8_t readAS5600Data(uint16_t regAddr, uint8_t *data, uint16_t size);
+uint16_t AS5600_GetAngle1(void);
+uint16_t AS5600_GetAngle2(void);
 
 /* USER CODE END FunctionPrototypes */
 

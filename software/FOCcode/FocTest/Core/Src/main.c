@@ -29,7 +29,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdio.h>
+#include "AS5600.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -62,7 +63,17 @@ void MX_FREERTOS_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+struct __FILE {
+    int handle;
+};
 
+FILE __stdout;
+
+int fputc(int ch, FILE *f)
+{
+  HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, 0xFFFF);
+  return ch;
+}
 /* USER CODE END 0 */
 
 /**
@@ -122,8 +133,12 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    uint16_t angle1 = AS5600_GetAngle1();
+    uint16_t angle2 = AS5600_GetAngle2();
+    printf("AS5600_1: %d, AS5600_2: %d\r\n", angle1, angle2);
+    HAL_Delay(100);
+    /* USER CODE END 3 */
   }
-  /* USER CODE END 3 */
 }
 
 /**
