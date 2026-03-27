@@ -1,276 +1,31 @@
 <?xml version="1.0"?>
-<xml_fragment xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:property name="arm_length" value="0.3"/>
-  <xacro:property name="body_width" value="0.15"/>
-  <xacro:property name="body_height" value="0.05"/>
-  <xacro:property name="propeller_radius" value="0.1"/>
-  <xacro:property name="propeller_thickness" value="0.005"/>
-  <xacro:property name="mass" value="1.5"/>
-
-  <xacro:macro name="quad_body_material">
-    <material name="quad_body_color">
-      <color rgba="0.3 0.3 0.3 1.0"/>
-    </material>
-    <material name="quad_arm_color">
-      <color rgba="0.5 0.5 0.5 1.0"/>
-    </material>
-    <material name="quad_propeller_color">
-      <color rgba="0.2 0.2 0.2 0.8"/>
-    </material>
+  <xacro:macro name="quadrotor" params="parent_link *origin">
+    <link name="quad_base_link">
+      <visual>
+        <geometry>
+          <box size="0.3 0.3 0.1"/>
+        </geometry>
+        <material>
+          <color rgba="0.2 0.8 0.2 1"/>
+        </material>
+      </visual>
+      <collision>
+        <geometry>
+          <box size="0.3 0.3 0.1"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="1.0"/>
+        <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+      </inertial>
+    </link>
+    <joint name="quad_base_joint" type="fixed">
+      <parent link="${parent_link}"/>
+      <child link="quad_base_link"/>
+      <xacro:insert_block name="origin"/>
+    </joint>
   </xacro:macro>
 
-  <xacro:macro name="quadrotor_base" params="parent_link *origin">
-
-  <link name="quad_base_link">
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="${body_width} ${body_width} ${body_height}"/>
-      </geometry>
-      <material name="quad_body_color"/>
-    </visual>
-    <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="${body_width} ${body_width} ${body_height}"/>
-      </geometry>
-    </collision>
-    <inertial>
-      <mass value="${mass}"/>
-      <inertia ixx="0.005" ixy="0" ixz="0" iyy="0.005" iyz="0" izz="0.01"/>
-    </inertial>
-  </link>
-
-  <joint name="quad_base_joint" type="fixed">
-    <parent link="${parent_link}"/>
-    <child link="quad_base_link"/>
-    <xacro:insert_block name="origin"/>
-  </joint>
-
-  <link name="quad_front_arm">
-    <visual>
-      <origin xyz="${arm_length/2} 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="${arm_length} 0.02 0.02"/>
-      </geometry>
-      <material name="quad_arm_color"/>
-    </visual>
-    <collision>
-      <origin xyz="${arm_length/2} 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="${arm_length} 0.02 0.02"/>
-      </geometry>
-    </collision>
-    <inertial>
-      <mass value="0.05"/>
-      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.001"/>
-    </inertial>
-  </link>
-  <joint name="quad_front_arm_joint" type="fixed">
-    <parent link="quad_base_link"/>
-    <child link="quad_front_arm"/>
-    <origin xyz="0 0 0" rpy="0 0 0"/>
-  </joint>
-
-  <link name="quad_right_arm">
-    <visual>
-      <origin xyz="${arm_length/2} 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="${arm_length} 0.02 0.02"/>
-      </geometry>
-      <material name="quad_arm_color"/>
-    </visual>
-    <collision>
-      <origin xyz="${arm_length/2} 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="${arm_length} 0.02 0.02"/>
-      </geometry>
-    </collision>
-    <inertial>
-      <mass value="0.05"/>
-      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.001"/>
-    </inertial>
-  </link>
-  <joint name="quad_right_arm_joint" type="fixed">
-    <parent link="quad_base_link"/>
-    <child link="quad_right_arm"/>
-    <origin xyz="0 0 0" rpy="0 0 1.5708"/>
-  </joint>
-
-  <link name="quad_back_arm">
-    <visual>
-      <origin xyz="${arm_length/2} 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="${arm_length} 0.02 0.02"/>
-      </geometry>
-      <material name="quad_arm_color"/>
-    </visual>
-    <collision>
-      <origin xyz="${arm_length/2} 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="${arm_length} 0.02 0.02"/>
-      </geometry>
-    </collision>
-    <inertial>
-      <mass value="0.05"/>
-      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.001"/>
-    </inertial>
-  </link>
-  <joint name="quad_back_arm_joint" type="fixed">
-    <parent link="quad_base_link"/>
-    <child link="quad_back_arm"/>
-    <origin xyz="0 0 0" rpy="0 0 3.14159"/>
-  </joint>
-
-  <link name="quad_left_arm">
-    <visual>
-      <origin xyz="${arm_length/2} 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="${arm_length} 0.02 0.02"/>
-      </geometry>
-      <material name="quad_arm_color"/>
-    </visual>
-    <collision>
-      <origin xyz="${arm_length/2} 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="${arm_length} 0.02 0.02"/>
-      </geometry>
-    </collision>
-    <inertial>
-      <mass value="0.05"/>
-      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.001"/>
-    </inertial>
-  </link>
-  <joint name="quad_left_arm_joint" type="fixed">
-    <parent link="quad_base_link"/>
-    <child link="quad_left_arm"/>
-    <origin xyz="0 0 0" rpy="0 0 -1.5708"/>
-  </joint>
-
-  <link name="quad_front_prop">
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <cylinder radius="${propeller_radius}" length="${propeller_thickness}"/>
-      </geometry>
-      <material name="quad_propeller_color"/>
-    </visual>
-    <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <cylinder radius="${propeller_radius}" length="${propeller_thickness}"/>
-      </geometry>
-    </collision>
-    <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
-    </inertial>
-  </link>
-  <joint name="quad_front_prop_joint" type="continuous">
-    <parent link="quad_front_arm"/>
-    <child link="quad_front_prop"/>
-    <origin xyz="${arm_length} 0 0" rpy="0 0 0"/>
-    <axis xyz="0 0 1"/>
-  </joint>
-
-  <link name="quad_right_prop">
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <cylinder radius="${propeller_radius}" length="${propeller_thickness}"/>
-      </geometry>
-      <material name="quad_propeller_color"/>
-    </visual>
-    <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <cylinder radius="${propeller_radius}" length="${propeller_thickness}"/>
-      </geometry>
-    </collision>
-    <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
-    </inertial>
-  </link>
-  <joint name="quad_right_prop_joint" type="continuous">
-    <parent link="quad_right_arm"/>
-    <child link="quad_right_prop"/>
-    <origin xyz="${arm_length} 0 0" rpy="0 0 0"/>
-    <axis xyz="0 0 1"/>
-  </joint>
-
-  <link name="quad_back_prop">
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <cylinder radius="${propeller_radius}" length="${propeller_thickness}"/>
-      </geometry>
-      <material name="quad_propeller_color"/>
-    </visual>
-    <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <cylinder radius="${propeller_radius}" length="${propeller_thickness}"/>
-      </geometry>
-    </collision>
-    <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
-    </inertial>
-  </link>
-  <joint name="quad_back_prop_joint" type="continuous">
-    <parent link="quad_back_arm"/>
-    <child link="quad_back_prop"/>
-    <origin xyz="${arm_length} 0 0" rpy="0 0 0"/>
-    <axis xyz="0 0 1"/>
-  </joint>
-
-  <link name="quad_left_prop">
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <cylinder radius="${propeller_radius}" length="${propeller_thickness}"/>
-      </geometry>
-      <material name="quad_propeller_color"/>
-    </visual>
-    <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <cylinder radius="${propeller_radius}" length="${propeller_thickness}"/>
-      </geometry>
-    </collision>
-    <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
-    </inertial>
-  </link>
-  <joint name="quad_left_prop_joint" type="continuous">
-    <parent link="quad_left_arm"/>
-    <child link="quad_left_prop"/>
-    <origin xyz="${arm_length} 0 0" rpy="0 0 0"/>
-    <axis xyz="0 0 1"/>
-  </joint>
-
-  <link name="quad_imu_link">
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.03 0.03 0.02"/>
-      </geometry>
-      <material name="quad_body_color"/>
-    </visual>
-    <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="0.00001" ixy="0" ixz="0" iyy="0.00001" iyz="0" izz="0.00001"/>
-    </inertial>
-  </link>
-  <joint name="quad_imu_joint" type="fixed">
-    <parent link="quad_base_link"/>
-    <child link="quad_imu_link"/>
-    <origin xyz="0 0 -0.02" rpy="0 0 0"/>
-  </joint>
-
-  </xacro:macro>
-
-</xml_fragment>
+</robot>
