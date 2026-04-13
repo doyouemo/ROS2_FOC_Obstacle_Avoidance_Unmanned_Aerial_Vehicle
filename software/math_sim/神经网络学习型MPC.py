@@ -298,43 +298,43 @@ def plot_results(history_std, history_lrn, lrn_mpc, dt=0.02):
     time_u = time[:-1]
     
     fig, axes = plt.subplots(2, 3, figsize=(15, 8))
-    
-    # 图1: 角度响应对比
+
+    # Plot 1: Pitch Angle Comparison
     ax1 = axes[0, 0]
-    ax1.plot(time, history_std['theta'], 'r-', linewidth=2, label='标准 MPC (固定模型)')
-    ax1.plot(time, history_lrn['theta'], 'b-', linewidth=2, label='学习型 MPC')
+    ax1.plot(time, history_std['theta'], 'r-', linewidth=2, label='Standard MPC')
+    ax1.plot(time, history_lrn['theta'], 'b-', linewidth=2, label='Learning MPC')
     ax1.axhline(0, color='gray', linestyle='--', alpha=0.7)
-    ax1.set_ylabel('俯仰角 (deg)')
-    ax1.set_xlabel('时间 (s)')
+    ax1.set_ylabel('Pitch Angle (deg)')
+    ax1.set_xlabel('Time (s)')
     ax1.legend()
     ax1.grid(True)
-    ax1.set_title('角度响应对比 (45°初始偏角)')
-    
-    # 图2: 角速度响应
+    ax1.set_title('Pitch Angle Comparison (45 deg Initial)')
+
+    # Plot 2: Angular Velocity Response
     ax2 = axes[0, 1]
     q_std = np.array([x[1] for x in history_std['x']])
     q_lrn = np.array([x[1] for x in history_lrn['x']])
-    ax2.plot(time, np.degrees(q_std), 'r-', linewidth=2, label='标准 MPC')
-    ax2.plot(time, np.degrees(q_lrn), 'b-', linewidth=2, label='学习型 MPC')
-    ax2.set_ylabel('角速度 (deg/s)')
-    ax2.set_xlabel('时间 (s)')
+    ax2.plot(time, np.degrees(q_std), 'r-', linewidth=2, label='Standard MPC')
+    ax2.plot(time, np.degrees(q_lrn), 'b-', linewidth=2, label='Learning MPC')
+    ax2.set_ylabel('Pitch Rate (deg/s)')
+    ax2.set_xlabel('Time (s)')
     ax2.legend()
     ax2.grid(True)
-    ax2.set_title('角速度响应')
-    
-    # 图3: 控制输入
+    ax2.set_title('Angular Velocity Response')
+
+    # Plot 3: Control Input
     ax3 = axes[0, 2]
     ax3.step(time_u, history_std['u'], 'r-', linewidth=2, where='post', alpha=0.7)
     ax3.step(time_u, history_lrn['u'], 'b-', linewidth=2, where='post', alpha=0.7)
-    ax3.axhline(3.0, color='k', linestyle=':', label='限幅')
+    ax3.axhline(3.0, color='k', linestyle=':', label='Limit')
     ax3.axhline(-3.0, color='k', linestyle=':')
-    ax3.set_ylabel('力矩 (N·m)')
-    ax3.set_xlabel('时间 (s)')
-    ax3.legend(['标准 MPC', '学习型 MPC'])
+    ax3.set_ylabel('Torque (N·m)')
+    ax3.set_xlabel('Time (s)')
+    ax3.legend(['Standard MPC', 'Learning MPC'])
     ax3.grid(True)
-    ax3.set_title('控制输入')
-    
-    # 图4: 稳态误差放大图 (最后2秒)
+    ax3.set_title('Control Input')
+
+    # Plot 4: Steady-State Error Zoom (Last 2s)
     ax4 = axes[1, 0]
     last_idx = int(2.0 / dt)
     time_zoom = time[-last_idx:]
@@ -343,34 +343,34 @@ def plot_results(history_std, history_lrn, lrn_mpc, dt=0.02):
     ax4.plot(time_zoom, theta_std_zoom, 'r-', linewidth=2)
     ax4.plot(time_zoom, theta_lrn_zoom, 'b-', linewidth=2)
     ax4.axhline(0, color='gray', linestyle='--', alpha=0.7)
-    ax4.set_ylabel('俯仰角 (deg)')
-    ax4.set_xlabel('时间 (s)')
+    ax4.set_ylabel('Pitch Angle (deg)')
+    ax4.set_xlabel('Time (s)')
     ax4.grid(True)
-    ax4.set_title('稳态误差放大图 (最后2秒)')
-    
-    # 图5: 训练损失曲线
+    ax4.set_title('Steady-State Error Zoom (Last 2s)')
+
+    # Plot 5: Training Loss
     ax5 = axes[1, 1]
     if len(lrn_mpc.train_losses) > 0:
         ax5.plot(lrn_mpc.train_losses, 'g-', linewidth=2)
         ax5.set_ylabel('MSE Loss')
-        ax5.set_xlabel('训练批次')
+        ax5.set_xlabel('Training Epoch')
         ax5.grid(True)
-        ax5.set_title('神经网络训练损失')
+        ax5.set_title('Neural Network Training Loss')
         ax5.set_yscale('log')
-    
-    # 图6: 累计绝对误差对比
+
+    # Plot 6: Cumulative Absolute Error
     ax6 = axes[1, 2]
     cum_error_std = np.cumsum(np.abs(np.array(history_std['theta']))) * dt
     cum_error_lrn = np.cumsum(np.abs(np.array(history_lrn['theta']))) * dt
     ax6.plot(time, cum_error_std, 'r-', linewidth=2)
     ax6.plot(time, cum_error_lrn, 'b-', linewidth=2)
-    ax6.set_ylabel('累计绝对误差 (deg·s)')
-    ax6.set_xlabel('时间 (s)')
-    ax6.legend(['标准 MPC', '学习型 MPC'])
+    ax6.set_ylabel('Cumulative Abs Error (deg·s)')
+    ax6.set_xlabel('Time (s)')
+    ax6.legend(['Standard MPC', 'Learning MPC'])
     ax6.grid(True)
-    ax6.set_title('累计跟踪误差')
-    
-    plt.suptitle('四旋翼俯仰通道: 标准 MPC vs 神经网络学习型 MPC', fontsize=14)
+    ax6.set_title('Cumulative Tracking Error')
+
+    plt.suptitle('Quadrotor Pitch Channel: Standard MPC vs Neural Learning MPC', fontsize=14)
     plt.tight_layout()
     plt.show()
     
