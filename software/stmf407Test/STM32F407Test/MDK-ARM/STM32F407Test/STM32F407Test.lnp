@@ -30,6 +30,7 @@
 "stm32f407test\cmsis_os2.o"
 "stm32f407test\heap_4.o"
 "stm32f407test\port.o"
+"stm32f407test\as5600.o"
 --strict --scatter "STM32F407Test\STM32F407Test.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

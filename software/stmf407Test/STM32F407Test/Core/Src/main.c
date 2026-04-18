@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "AS5600.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,7 +48,7 @@ I2C_HandleTypeDef hi2c2;
 osThreadId_t defaultTaskHandle;
 const osThreadAttr_t defaultTask_attributes = {
   .name = "defaultTask",
-  .stack_size = 128 * 4,
+  .stack_size = 512 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* USER CODE BEGIN PV */
@@ -301,10 +301,25 @@ static void MX_GPIO_Init(void)
 void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN 5 */
-  /* Infinite loop */
-  for(;;)
+  uint16_t angle_i2c1;
+  uint16_t angle_i2c2;
+  float deg_i2c1;
+  float deg_i2c2;
+
+  /* 两路独立 I2C，各挂一颗 AS5600（从地址均为 0x36，互不冲突） */
+  for (;;)
   {
-    osDelay(1);
+    if (AS5600_ReadAngle(&hi2c1, &angle_i2c1) == HAL_OK)
+    {
+      deg_i2c1 = AS5600_Angle12_ToDegrees(angle_i2c1);
+      (void)deg_i2c1;
+    }
+    if (AS5600_ReadAngle(&hi2c2, &angle_i2c2) == HAL_OK)
+    {
+      deg_i2c2 = AS5600_Angle12_ToDegrees(angle_i2c2);
+      (void)deg_i2c2;
+    }
+    osDelay(10U);
   }
   /* USER CODE END 5 */
 }

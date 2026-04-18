@@ -41,3 +41,4 @@ stm32f407test\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wra
 stm32f407test\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
 stm32f407test\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
 stm32f407test\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
+stm32f407test\main.o: ..\Component\Inc\AS5600.h
