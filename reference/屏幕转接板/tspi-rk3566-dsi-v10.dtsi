@@ -1,0 +1,231 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright (c) 2020 Rockchip Electronics Co., Ltd.
+ *
+ */
+/*********************************************************************
+ *           立创开发板不靠卖板赚钱，以培养中国工程师为己任          
+ *         泰山派软硬件资料与相关扩展板软硬件资料官网全部开源		 
+ *                      开发板官网：www.lckfb.com                    
+ *                     立创论坛：oshwhub.com/forum                   
+ *            关注B站：【立创开发板】，掌握我们的最新动态！          
+ *********************************************************************
+ * 文件名：tspi-rk3566-dsi-v10.dtsi
+ * 描述：屏幕 TM055CDXP35 1080P60和GT1151触摸面板驱动
+ * 更新:
+ * 时间          作者           联系           说明
+ * 2023-07-21   吴才成    1378913492@qq.com   v1.0.0
+ * 2026-03-10   大佬鼠   urmouky@outlook.com  v1.0.0
+ *********************************************************************/
+
+/ {
+	backlight: backlight {
+		compatible = "pwm-backlight";
+		pwms = <&pwm5 0 25000 0>;
+		brightness-levels = <
+			  0  20  20  21  21  22  22  23
+			 23  24  24  25  25  26  26  27
+			 27  28  28  29  29  30  30  31
+			 31  32  32  33  33  34  34  35
+			 35  36  36  37  37  38  38  39
+			 40  41  42  43  44  45  46  47
+			 48  49  50  51  52  53  54  55
+			 56  57  58  59  60  61  62  63
+			 64  65  66  67  68  69  70  71
+			 72  73  74  75  76  77  78  79
+			 80  81  82  83  84  85  86  87
+			 88  89  90  91  92  93  94  95
+			 96  97  98  99 100 101 102 103
+			104 105 106 107 108 109 110 111
+			112 113 114 115 116 117 118 119
+			120 121 122 123 124 125 126 127
+			128 129 130 131 132 133 134 135
+			136 137 138 139 140 141 142 143
+			144 145 146 147 148 149 150 151
+			152 153 154 155 156 157 158 159
+			160 161 162 163 164 165 166 167
+			168 169 170 171 172 173 174 175
+			176 177 178 179 180 181 182 183
+			184 185 186 187 188 189 190 191
+			192 193 194 195 196 197 198 199
+			200 201 202 203 204 205 206 207
+			208 209 210 211 212 213 214 215
+			216 217 218 219 220 221 222 223
+			224 225 226 227 228 229 230 231
+			232 233 234 235 236 237 238 239
+			240 241 242 243 244 245 246 247
+			248 249 250 251 252 253 254 255
+		>;
+		default-brightness-level = <50>;
+	};
+};
+
+&pwm5 {
+	status = "okay";
+};
+
+&i2c1 {
+    status = "okay";
+    // 触控主控型号: Goodix GT1151, 这个是测试用的, 并未编译到内核, 同时需要配置内核启用gt1x驱动
+    gt1151: gt1151@14 {
+        compatible = "goodix,gt1x";
+        reg = <0x14>;
+
+        pinctrl-names = "default";
+        pinctrl-0 = <&touch_gpio>;
+
+        goodix,irq-gpio = <&gpio1 RK_PA0 IRQ_TYPE_LEVEL_LOW>;
+        goodix,rst-gpio = <&gpio1 RK_PA1 GPIO_ACTIVE_HIGH>;
+
+        touchscreen-size-x = <1080>;
+        touchscreen-size-y = <1920>;
+
+        /* 如果发现X/Y轴反了, 可以打开这个: touchscreen-swapped-x-y; */
+    };
+};
+
+&pinctrl {
+	dsi1 {
+		dsi1_rst_gpio: dsi1-rst-gpio {
+			rockchip,pins = <3 RK_PC1 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+		touch_gpio: touch-gpio {
+			rockchip,pins = <1 RK_PA0 RK_FUNC_GPIO &pcfg_pull_up>;
+		};
+	};
+};
+
+/*
+ * video_phy1 needs to be enabled
+ * when dsi1 is enabled
+ */
+&dsi1 {
+	status = "okay";
+};
+
+&dsi1_in_vp0 {
+	status = "disabled";
+};
+
+&dsi1_in_vp1 {
+	status = "okay";
+};
+
+&video_phy1 {
+	status = "okay";
+};
+
+&route_dsi1 {
+	status = "okay";
+	connect = <&vp1_out_dsi1>;
+};
+
+&gpu {
+	mali-supply = <&vdd_gpu>;
+	status = "okay";
+	clock-names = "gpu", "bus";
+	interrupt-names = "gpu", "mmu", "job";
+};
+
+// STL6.0-1-2-A
+&dsi1 {
+	status = "okay";
+	// rockchip,lane-rate = <960>;
+	dsi1_panel: panel@0 {
+		status = "okay";
+		compatible = "simple-panel-dsi";
+		reset-gpios = <&gpio3 RK_PC1 GPIO_ACTIVE_LOW>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&dsi1_rst_gpio>;
+		reg = <0>;
+		backlight = <&backlight>;
+		reset-delay-ms = <200>;
+		enable-delay-ms = <200>;
+		prepare-delay-ms = <200>;
+		unprepare-delay-ms = <200>;
+		disable-delay-ms = <200>;
+		init-delay-ms = <200>;
+		dsi,flags = <(MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST |
+			MIPI_DSI_MODE_LPM | MIPI_DSI_MODE_EOT_PACKET)>;
+		dsi,format = <MIPI_DSI_FMT_RGB888>;
+		dsi,lanes  = <4>;
+		panel-init-sequence = [    
+			39 00 04 B9 FF 83 99
+			39 00 10 B1 02 04 6D 8D 01 32 33 11 11 5A 5F 56 73 02 02
+			39 00 0C B2 00 80 80 AE 05 07 5A 11 10 10 00
+			39 00 2D B4 00 FF 10 18 04 9A 00 00 06 00 02 04 00 24 02 04 0A 21 03 00 00 02 9F 88 10 18 04 9A 00 00 08 00 02 04 00 24 02 04 0A 00 00 02 9F 12
+			39 00 22 D3 00 00 00 00 00 00 30 00 00 00 05 00 05 00 07 88 07 88 00 00 00 00 00 15 00 00 00 01 00 00 00 05 40
+			39 00 21 D5 20 20 19 19 18 18 01 01 00 00 25 25 18 18 18 18 24 24 18 18 18 18 18 18 18 18 2F 2F 30 30 31 31
+			39 00 21 D6 24 24 18 18 19 19 00 00 01 01 25 25 18 18 18 18 20 20 18 18 18 18 18 18 18 18 2F 2F 30 30 31 31
+			39 00 11 D8 AA 8A AA AA AA 8A AA AA AA 8A AA AA AA 8A AA AA
+			39 00 02 BD 01
+			39 00 11 D8 FF FC C0 3F FF FC C0 3F FF FC C0 3F FF FC C0 3F
+			39 00 02 BD 02
+			39 00 09 D8 FF FC C0 3F FF FC C0 3F
+			39 00 02 BD 00
+			39 00 02 CC 08
+			39 00 37 E0 02 2C 3A 35 6E 76 81 7C 81 89 91 94 99 9C A4 A6 A9 AF B1 B8 A9 B6 B9 5F 5A 62 7C 02 2C 3A 35 6E 76 81 7C 81 89 91 94 99 9C A3 A5 A7 AF B1 B6 AA B6 B7 5E 59 62 7C
+			39 00 02 D0 39
+			05 78 01 11
+			05 32 01 29
+		];
+
+		panel-exit-sequence = [
+			05 00 01 28
+			05 00 01 10
+		];
+
+		disp_timings1: display-timings {
+			native-mode = <&dsi1_timing0>;
+			dsi1_timing0: timing0 {
+				clock-frequency = <151000000>;
+
+				hactive = <1080>;
+				vactive = <1920>;
+
+				hback-porch = <80>;
+				hfront-porch = <100>;
+				hsync-len = <20>;
+
+				vback-porch = <32>;
+				vfront-porch = <16>;
+				vsync-len = <5>;
+
+				hsync-active = <0>;
+				vsync-active = <0>;
+				de-active = <0>;
+				pixelclk-active = <0>;
+
+				swap-rb = <0>;
+				swap-rg = <0>;
+				swap-gb = <0>;
+			};
+		};
+
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			port@0 {
+				reg = <0>;
+				panel_in_dsi1: endpoint {
+					remote-endpoint = <&dsi1_out_panel>;
+				};
+			};
+		};
+	};
+
+	ports {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		port@1 {
+			reg = <1>;
+			dsi1_out_panel: endpoint {
+				remote-endpoint = <&panel_in_dsi1>;
+			};
+		};
+	};
+
+};
+

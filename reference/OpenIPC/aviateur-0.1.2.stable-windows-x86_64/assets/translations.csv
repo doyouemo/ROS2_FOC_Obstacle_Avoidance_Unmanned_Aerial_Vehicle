@@ -1,0 +1,50 @@
+tag,en,zh,ru
+lang,Language,语言,Язык
+fullscreen,Fullscreen,全屏,Полноэкранный
+bit rate,Bit rate,码率,Битрейт
+display fps,Display FPS,显示帧率,Отображение FPS
+hw decoding,Hardware decoding,硬件解码,аппаратное декодирование
+capture frame,Capture frame,截图,кадр захвата
+player control,Player control,播放控制,контроль игрока
+record mp4,Record MP4,录制 MP4,Запись MP4
+recording,Recording,正在录制,Запись
+stop recording,Stop Recording,停止录制,Остановить запись
+channel,Channel,频道,Канал
+channel width,Channel width,频宽,Ширина канала
+key,Key,密钥,Ключ
+settings,Settings,设置,Настройки
+video stab,Video stabilization,视频增稳,Стабилизация видео
+force sw decoding,Force software decoding,强制软件解码,Принудительное программное декодирование
+start,Start,开始,начинать
+stop,Stop,停止,остановить
+open,Open,打开,Открыть
+close,Close,关闭,Закрывать
+port,Port,端口,Порт
+local,Local,本机,Местный
+on,On,开,вкл
+off,Off,关,выкл
+invalid usb msg,Invalid USB device!,无效的 USB 设备！,Недопустимое USB-устройство!
+wi-fi stopped msg, Wi-Fi stopped!,无线已停止！,Wi-Fi остановлен!
+device,Device,设备,Устройство
+capture fail,Failed to capture frame!,截图失败！,Не удалось захватить кадр
+frame saved,Frame saved to: ,截图保存至：,Кадр сохранен в:
+record fail,Recording failed!,录制失败！,Запись не удалась
+save record fail,Failed to save the record file!,保存录制文件失败！,Не удалось сохранить файл записи!
+video saved,Video saved to: ,视频保存至：,Видео сохранено в:
+video stab warning,Video stabilization is experimental!,视频增稳是实验性功能！,Стабилизация видео экспериментальная!
+capture folder,Capture folder,录制文件夹,Папка захвата
+config folder,Config folder,配置文件夹,Папка конфигурации
+open crash dump folder,Open crash dump folder,打开崩溃数据文件夹,Открыть папку аварийного дампа
+show console,Show console,显示控制台,Показать консоль
+invalid input data,Invalid input data!,无效的输入数据！,Неверные входные данные!
+signal lost,Signal lost!,信号丢失！,Сигнал потерян!
+low light enhancement simple,Low light enhancement (simple),低光增强（简单）,Улучшение при слабом освещении (простое)
+low light enhancement dnn,Low light enhancement (DNN),低光增强（DNN）,Улучшение при слабом освещении (DNN)
+control panel,Control panel,控制面板,Панель управления
+alink,Adaptive link,自适应链路,Адаптивная ссылка
+tx power,TX power,发射功率,мощность передачи
+version,Version,版本,версия
+use gstreamer,Use GStreamer,使用GStreamer,использовать GStreamer
+codec,Codec,编码,Кодек
+dark mode,Dark mode,黑暗模式,Темный режим
+default,Default,默认,По умолчанию

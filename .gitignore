@@ -16,3 +16,4 @@ __pycache__/
 
 # 嵌套仓库
 software/fly_ROS2_sim/acmpc_public/
+reference/地面站、软件/**
