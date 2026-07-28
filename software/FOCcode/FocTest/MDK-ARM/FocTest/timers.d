@@ -1,12 +1,15 @@
-foctest/timers.o: ..\Middlewares\Third_Party\FreeRTOS\Source\timers.c \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\FreeRTOS.h \
-  ..\Core\Inc\FreeRTOSConfig.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\projdefs.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\portable.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\deprecated_definitions.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\portable\RVDS\ARM_CM3\portmacro.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\mpu_wrappers.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\task.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\list.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\queue.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\timers.h
+foctest\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/timers.c
+foctest\timers.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stdlib.h
+foctest\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+foctest\timers.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stddef.h
+foctest\timers.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stdint.h
+foctest\timers.o: ../Core/Inc/FreeRTOSConfig.h
+foctest\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+foctest\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+foctest\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+foctest\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3/portmacro.h
+foctest\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+foctest\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+foctest\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+foctest\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
+foctest\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h

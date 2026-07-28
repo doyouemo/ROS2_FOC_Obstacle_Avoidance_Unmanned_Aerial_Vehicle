@@ -1,8 +1,8 @@
 stm32f407test\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c
-stm32f407test\stream_buffer.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
-stm32f407test\stream_buffer.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\string.h
+stm32f407test\stream_buffer.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stdint.h
+stm32f407test\stream_buffer.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\string.h
 stm32f407test\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-stm32f407test\stream_buffer.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+stm32f407test\stream_buffer.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stddef.h
 stm32f407test\stream_buffer.o: ../Core/Inc/FreeRTOSConfig.h
 stm32f407test\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 stm32f407test\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h

@@ -1,8 +1,8 @@
 stm32f407test\cmsis_os2.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c
-stm32f407test\cmsis_os2.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\string.h
+stm32f407test\cmsis_os2.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\string.h
 stm32f407test\cmsis_os2.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
-stm32f407test\cmsis_os2.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
-stm32f407test\cmsis_os2.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+stm32f407test\cmsis_os2.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stdint.h
+stm32f407test\cmsis_os2.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stddef.h
 stm32f407test\cmsis_os2.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 stm32f407test\cmsis_os2.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
 stm32f407test\cmsis_os2.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
@@ -46,3 +46,4 @@ stm32f407test\cmsis_os2.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c
 stm32f407test\cmsis_os2.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h
 stm32f407test\cmsis_os2.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 stm32f407test\cmsis_os2.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
+stm32f407test\cmsis_os2.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h

@@ -19,6 +19,7 @@
 "stm32f407test\stm32f4xx_hal_exti.o"
 "stm32f407test\stm32f4xx_hal_i2c.o"
 "stm32f407test\stm32f4xx_hal_i2c_ex.o"
+"stm32f407test\stm32f4xx_hal_uart.o"
 "stm32f407test\system_stm32f4xx.o"
 "stm32f407test\croutine.o"
 "stm32f407test\event_groups.o"
@@ -31,7 +32,7 @@
 "stm32f407test\heap_4.o"
 "stm32f407test\port.o"
 "stm32f407test\as5600.o"
---strict --scatter "STM32F407Test\STM32F407Test.sct"
+--library_type=microlib --strict --scatter "STM32F407Test\STM32F407Test.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
 --list "STM32F407Test.map" -o STM32F407Test\STM32F407Test.axf

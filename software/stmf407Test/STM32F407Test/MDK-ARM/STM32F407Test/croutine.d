@@ -1,7 +1,7 @@
 stm32f407test\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/croutine.c
 stm32f407test\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-stm32f407test\croutine.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-stm32f407test\croutine.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+stm32f407test\croutine.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stddef.h
+stm32f407test\croutine.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stdint.h
 stm32f407test\croutine.o: ../Core/Inc/FreeRTOSConfig.h
 stm32f407test\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 stm32f407test\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h

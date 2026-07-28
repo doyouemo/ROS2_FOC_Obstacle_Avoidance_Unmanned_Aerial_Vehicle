@@ -1,8 +1,8 @@
 stm32f407test\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/event_groups.c
-stm32f407test\event_groups.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+stm32f407test\event_groups.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stdlib.h
 stm32f407test\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-stm32f407test\event_groups.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-stm32f407test\event_groups.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+stm32f407test\event_groups.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stddef.h
+stm32f407test\event_groups.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stdint.h
 stm32f407test\event_groups.o: ../Core/Inc/FreeRTOSConfig.h
 stm32f407test\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 stm32f407test\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h

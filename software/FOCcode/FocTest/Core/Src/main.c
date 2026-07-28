@@ -137,7 +137,7 @@ int main(void)
     uint16_t angle2 = AS5600_GetAngle2();
     printf("AS5600_1: %d, AS5600_2: %d\r\n", angle1, angle2);
     HAL_Delay(100);
-    /* USER CODE END 3 */
+  /* USER CODE END 3 */
   }
 }
 

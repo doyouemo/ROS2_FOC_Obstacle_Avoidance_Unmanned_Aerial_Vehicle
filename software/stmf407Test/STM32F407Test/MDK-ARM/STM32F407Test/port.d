@@ -1,7 +1,7 @@
 stm32f407test\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/port.c
 stm32f407test\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-stm32f407test\port.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-stm32f407test\port.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+stm32f407test\port.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stddef.h
+stm32f407test\port.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stdint.h
 stm32f407test\port.o: ../Core/Inc/FreeRTOSConfig.h
 stm32f407test\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 stm32f407test\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h

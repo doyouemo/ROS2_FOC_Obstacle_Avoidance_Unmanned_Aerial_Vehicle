@@ -1,9 +1,12 @@
-foctest/list.o: ..\Middlewares\Third_Party\FreeRTOS\Source\list.c \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\FreeRTOS.h \
-  ..\Core\Inc\FreeRTOSConfig.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\projdefs.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\portable.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\deprecated_definitions.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\portable\RVDS\ARM_CM3\portmacro.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\mpu_wrappers.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\list.h
+foctest\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/list.c
+foctest\list.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stdlib.h
+foctest\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+foctest\list.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stddef.h
+foctest\list.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stdint.h
+foctest\list.o: ../Core/Inc/FreeRTOSConfig.h
+foctest\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+foctest\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+foctest\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+foctest\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3/portmacro.h
+foctest\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+foctest\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h

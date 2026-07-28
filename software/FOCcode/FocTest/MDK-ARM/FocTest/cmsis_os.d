@@ -1,17 +1,19 @@
-foctest/cmsis_os.o: \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS\cmsis_os.c \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS\cmsis_os.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\FreeRTOS.h \
-  ..\Core\Inc\FreeRTOSConfig.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\projdefs.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\portable.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\deprecated_definitions.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\portable\RVDS\ARM_CM3\portmacro.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\mpu_wrappers.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\task.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\list.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\timers.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\queue.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\semphr.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\event_groups.h \
-  ..\Drivers\CMSIS\Include\cmsis_gcc.h
+foctest\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.c
+foctest\cmsis_os.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\string.h
+foctest\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
+foctest\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+foctest\cmsis_os.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stddef.h
+foctest\cmsis_os.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stdint.h
+foctest\cmsis_os.o: ../Core/Inc/FreeRTOSConfig.h
+foctest\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+foctest\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+foctest\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+foctest\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3/portmacro.h
+foctest\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+foctest\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+foctest\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+foctest\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
+foctest\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
+foctest\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
+foctest\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
+foctest\cmsis_os.o: ../Drivers/CMSIS/Include/cmsis_armcc.h

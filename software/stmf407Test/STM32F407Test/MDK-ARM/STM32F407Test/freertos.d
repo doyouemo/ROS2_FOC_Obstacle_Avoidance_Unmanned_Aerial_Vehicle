@@ -1,7 +1,7 @@
 stm32f407test\freertos.o: ../Core/Src/freertos.c
 stm32f407test\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-stm32f407test\freertos.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-stm32f407test\freertos.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+stm32f407test\freertos.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stddef.h
+stm32f407test\freertos.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stdint.h
 stm32f407test\freertos.o: ../Core/Inc/FreeRTOSConfig.h
 stm32f407test\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 stm32f407test\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
@@ -39,3 +39,4 @@ stm32f407test\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.
 stm32f407test\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h
 stm32f407test\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 stm32f407test\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
+stm32f407test\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h

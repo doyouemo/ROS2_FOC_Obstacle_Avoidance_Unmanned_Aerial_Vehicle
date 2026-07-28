@@ -1,11 +1,15 @@
-foctest/queue.o: ..\Middlewares\Third_Party\FreeRTOS\Source\queue.c \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\FreeRTOS.h \
-  ..\Core\Inc\FreeRTOSConfig.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\projdefs.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\portable.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\deprecated_definitions.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\portable\RVDS\ARM_CM3\portmacro.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\mpu_wrappers.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\task.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\list.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\queue.h
+foctest\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/queue.c
+foctest\queue.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stdlib.h
+foctest\queue.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\string.h
+foctest\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+foctest\queue.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stddef.h
+foctest\queue.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stdint.h
+foctest\queue.o: ../Core/Inc/FreeRTOSConfig.h
+foctest\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+foctest\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+foctest\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+foctest\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3/portmacro.h
+foctest\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+foctest\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+foctest\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+foctest\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h

@@ -3,34 +3,59 @@
 <pre>
 <h1>µVision Build Log</h1>
 <h2>Tool Versions:</h2>
-IDE-Version: ¦ÌVision V5.40.0.0
-Copyright (C) 2024 ARM Ltd and ARM Germany GmbH. All rights reserved.
-License Information: KLF KLF, None, LIC=----
+IDE-Version: ¦ÌVision V5.42.0.0
+Copyright (C) 2025 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: a ASUS, a, LIC=----
  
 Tool Versions:
-Toolchain:       MDK-Lite  Version: 5.40.0.3
-Toolchain Path:  D:\software\keil\keil_v5\ARM\ARMCLANG\bin\
-C Compiler:      ArmClang.exe V6.22
-Assembler:       Armasm.exe V6.22
-Linker/Locator:  ArmLink.exe V6.22
-Library Manager: ArmAr.exe V6.22
-Hex Converter:   FromElf.exe V6.22
-CPU DLL:         SARMCM3.DLL V5.40.0.3
+Toolchain:       MDK-Lite  Version: 5.42.0.0
+Toolchain Path:  D:\open\keil_arm\ARM\ARM_MDK_5\Bin
+C Compiler:      Armcc.exe V5.06 update 5 (build 528)
+Assembler:       Armasm.exe V5.06 update 5 (build 528)
+Linker/Locator:  ArmLink.exe V5.06 update 5 (build 528)
+Library Manager: ArmAr.exe V5.06 update 5 (build 528)
+Hex Converter:   FromElf.exe V5.06 update 5 (build 528)
+CPU DLL:         SARMCM3.DLL V5.42.0.0
 Dialog DLL:      DCM.DLL V1.17.5.0
 Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.3.0.0
-Dialog DLL:      TCM.DLL V1.56.4.0
+Dialog DLL:      TCM.DLL V1.56.6.0
  
 <h2>Project:</h2>
-D:\project\ROS2_FOC_Obstacle_Avoidance_Unmanned_Aerial_Vehicle\software\FOCcode\FocTest\MDK-ARM\FocTest.uvprojx
-Project File Date:  04/01/2026
+C:\Users\ASUS\Desktop\work\ROS2_FOC_Obstacle_Avoidance_Unmanned_Aerial_Vehicle\software\FOCcode\FocTest\MDK-ARM\FocTest.uvprojx
+Project File Date:  06/03/2026
 
 <h2>Output:</h2>
-*** Target 'FocTest' uses ARM-Compiler 'Default Compiler Version 5' which is not available.
-*** Please review the installed ARM Compiler Versions:
-   'Manage Project Items - Folders/Extensions' to manage ARM Compiler Versions.
-   'Options for Target - Target' to select an ARM Compiler Version for the target.
-*** Rebuild aborted.
-Build Time Elapsed:  00:00:00
+*** Using Compiler 'V5.06 update 5 (build 528)', folder: 'D:\open\keil_arm\ARM\ARM_MDK_5\Bin'
+Build target 'FocTest'
+compiling AS5600.c...
+linking...
+Program Size: Code=13864 RO-data=352 RW-data=128 ZI-data=6248  
+FromELF: creating hex file...
+"FocTest\FocTest.axf" - 0 Error(s), 0 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                https://www.keil.com/pack/ARM.CMSIS.6.1.0.pack
+                ARM::CMSIS@6.1.0
+                CMSIS (Common Microcontroller Software Interface Standard)
+   * Component: CORE Version: 6.1.0
+
+Package Vendor: Keil
+                https://www.keil.com/pack/Keil.STM32F1xx_DFP.2.4.1.pack
+                Keil::STM32F1xx_DFP@2.4.1
+                STMicroelectronics STM32F1 Series Device Support, Drivers and Examples
+
+<h2>Collection of Component include folders:</h2>
+  ./RTE/_FocTest
+  D:/open/keil_pack/ARM/CMSIS/6.1.0/CMSIS/Core/Include
+  D:/open/keil_pack/Keil/STM32F1xx_DFP/2.4.1/Device/Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE@6.1.0
+      Include file:  CMSIS/Core/Include/tz_context.h
+Build Time Elapsed:  00:00:01
 </pre>
 </body>
 </html>
