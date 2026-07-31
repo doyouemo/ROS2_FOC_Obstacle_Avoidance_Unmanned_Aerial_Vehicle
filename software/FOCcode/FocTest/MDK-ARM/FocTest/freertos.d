@@ -1,7 +1,7 @@
 foctest\freertos.o: ../Core/Src/freertos.c
 foctest\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-foctest\freertos.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stddef.h
-foctest\freertos.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stdint.h
+foctest\freertos.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+foctest\freertos.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 foctest\freertos.o: ../Core/Inc/FreeRTOSConfig.h
 foctest\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 foctest\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
@@ -47,3 +47,10 @@ foctest\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
 foctest\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 foctest\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 foctest\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
+foctest\freertos.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+foctest\freertos.o: ../APP/Inc/AS5600.h
+foctest\freertos.o: ../Core/Inc/i2c.h
+foctest\freertos.o: ../APP/Inc/INA240.h
+foctest\freertos.o: ../Core/Inc/adc.h
+foctest\freertos.o: ../APP/Inc/MotorPWM.h
+foctest\freertos.o: ../Core/Inc/tim.h

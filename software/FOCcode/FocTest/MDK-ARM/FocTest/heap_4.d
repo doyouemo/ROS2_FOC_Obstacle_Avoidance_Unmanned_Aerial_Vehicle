@@ -1,8 +1,8 @@
 foctest\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c
-foctest\heap_4.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stdlib.h
+foctest\heap_4.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 foctest\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-foctest\heap_4.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stddef.h
-foctest\heap_4.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stdint.h
+foctest\heap_4.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+foctest\heap_4.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 foctest\heap_4.o: ../Core/Inc/FreeRTOSConfig.h
 foctest\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 foctest\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h

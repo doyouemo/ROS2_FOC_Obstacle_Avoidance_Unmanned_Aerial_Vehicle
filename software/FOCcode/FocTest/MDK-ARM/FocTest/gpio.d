@@ -8,14 +8,14 @@ foctest\gpio.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h
 foctest\gpio.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h
 foctest\gpio.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h
 foctest\gpio.o: ../Drivers/CMSIS/Include/core_cm3.h
-foctest\gpio.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stdint.h
+foctest\gpio.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 foctest\gpio.o: ../Drivers/CMSIS/Include/cmsis_version.h
 foctest\gpio.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 foctest\gpio.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
 foctest\gpio.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h
 foctest\gpio.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h
 foctest\gpio.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-foctest\gpio.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stddef.h
+foctest\gpio.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 foctest\gpio.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc_ex.h
 foctest\gpio.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h
 foctest\gpio.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio_ex.h

@@ -10,7 +10,7 @@
       <TargetName>FocTest</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060528::V5.06 update 5 (build 528)::.\ARM_MDK_5</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::.\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -718,6 +718,16 @@
               <FileName>AS5600.c</FileName>
               <FileType>1</FileType>
               <FilePath>../APP/Src/AS5600.c</FilePath>
+            </File>
+            <File>
+              <FileName>INA240.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../APP/Src/INA240.c</FilePath>
+            </File>
+            <File>
+              <FileName>MotorPWM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../APP/Src/MotorPWM.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -1,8 +1,8 @@
 foctest\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/event_groups.c
-foctest\event_groups.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stdlib.h
+foctest\event_groups.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 foctest\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-foctest\event_groups.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stddef.h
-foctest\event_groups.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stdint.h
+foctest\event_groups.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+foctest\event_groups.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 foctest\event_groups.o: ../Core/Inc/FreeRTOSConfig.h
 foctest\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 foctest\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h

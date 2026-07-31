@@ -115,7 +115,7 @@ int main(void)
   MX_I2C2_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
-
+  printf("UART printf OK\r\n");
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */
@@ -133,11 +133,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    uint16_t angle1 = AS5600_GetAngle1();
-    uint16_t angle2 = AS5600_GetAngle2();
-    printf("AS5600_1: %d, AS5600_2: %d\r\n", angle1, angle2);
-    HAL_Delay(100);
-  /* USER CODE END 3 */
+    /* USER CODE END 3 */
   }
 }
 

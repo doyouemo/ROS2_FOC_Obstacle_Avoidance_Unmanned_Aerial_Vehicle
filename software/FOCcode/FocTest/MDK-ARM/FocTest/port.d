@@ -1,7 +1,7 @@
 foctest\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3/port.c
 foctest\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-foctest\port.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stddef.h
-foctest\port.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stdint.h
+foctest\port.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+foctest\port.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 foctest\port.o: ../Core/Inc/FreeRTOSConfig.h
 foctest\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 foctest\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h

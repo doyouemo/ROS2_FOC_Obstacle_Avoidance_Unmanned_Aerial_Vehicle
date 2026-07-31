@@ -1,7 +1,7 @@
 foctest\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/croutine.c
 foctest\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-foctest\croutine.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stddef.h
-foctest\croutine.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stdint.h
+foctest\croutine.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+foctest\croutine.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 foctest\croutine.o: ../Core/Inc/FreeRTOSConfig.h
 foctest\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 foctest\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h

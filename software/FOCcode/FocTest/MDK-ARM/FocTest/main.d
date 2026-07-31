@@ -7,14 +7,14 @@ foctest\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h
 foctest\main.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h
 foctest\main.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h
 foctest\main.o: ../Drivers/CMSIS/Include/core_cm3.h
-foctest\main.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stdint.h
+foctest\main.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 foctest\main.o: ../Drivers/CMSIS/Include/cmsis_version.h
 foctest\main.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 foctest\main.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
 foctest\main.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h
 foctest\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h
 foctest\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-foctest\main.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stddef.h
+foctest\main.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 foctest\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc_ex.h
 foctest\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h
 foctest\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio_ex.h
@@ -54,5 +54,5 @@ foctest\main.o: ../Core/Inc/spi.h
 foctest\main.o: ../Core/Inc/tim.h
 foctest\main.o: ../Core/Inc/usart.h
 foctest\main.o: ../Core/Inc/gpio.h
-foctest\main.o: D:\open\keil_arm\ARM\ARM_MDK_5\Bin\..\include\stdio.h
+foctest\main.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 foctest\main.o: ../APP/Inc/AS5600.h
