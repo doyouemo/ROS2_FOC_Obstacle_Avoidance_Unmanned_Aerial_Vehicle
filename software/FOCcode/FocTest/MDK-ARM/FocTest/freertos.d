@@ -48,8 +48,6 @@ foctest\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 foctest\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 foctest\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
 foctest\freertos.o: D:\software\keil\keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-foctest\freertos.o: ../APP/Inc/AS5600.h
-foctest\freertos.o: ../Core/Inc/i2c.h
 foctest\freertos.o: ../APP/Inc/INA240.h
 foctest\freertos.o: ../Core/Inc/adc.h
 foctest\freertos.o: ../APP/Inc/MotorPWM.h

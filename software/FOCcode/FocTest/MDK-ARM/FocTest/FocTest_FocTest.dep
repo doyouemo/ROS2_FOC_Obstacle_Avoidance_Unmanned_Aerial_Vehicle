@@ -1,7 +1,7 @@
 Dependencies for Project 'FocTest', Target 'FocTest': (DO NOT MODIFY !)
 CompilerVersion: 5060750::V5.06 update 6 (build 750)::.\ARMCC
 F (startup_stm32f103xb.s)(0x69C09A07)(--cpu Cortex-M3 --pd "__EVAL SETA 1" -g --apcs=interwork -I ../Drivers/CMSIS/Include-I.\RTE\_FocTest-ID:\software\keil\keil_v5\Arm\Packs\ARM\CMSIS\6.3.0\CMSIS\Core\Include-ID:\software\keil\keil_v5\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include--pd "__UVISION_VERSION SETA 540" --pd "STM32F10X_MD SETA 1" --pd "_RTE_ SETA 1"--list startup_stm32f103xb.lst --xref -o foctest\startup_stm32f103xb.o --depend foctest\startup_stm32f103xb.d)
-F (../Core/Src/main.c)(0x6A6C3BDC)(--c99 -c --cpu Cortex-M3 -D__EVAL -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3 -I ../APP/Inc-I.\RTE\_FocTest-ID:\software\keil\keil_v5\Arm\Packs\ARM\CMSIS\6.3.0\CMSIS\Core\Include-ID:\software\keil\keil_v5\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="540" -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o foctest\main.o --omf_browse foctest\main.crf --depend foctest\main.d)
+F (../Core/Src/main.c)(0x6A6C4AFB)(--c99 -c --cpu Cortex-M3 -D__EVAL -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3 -I ../APP/Inc-I.\RTE\_FocTest-ID:\software\keil\keil_v5\Arm\Packs\ARM\CMSIS\6.3.0\CMSIS\Core\Include-ID:\software\keil\keil_v5\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="540" -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o foctest\main.o --omf_browse foctest\main.crf --depend foctest\main.d)
 I (../Core/Inc/main.h)(0x69B8F5C6)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x69B8F5BE)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x69C09A01)
@@ -93,7 +93,7 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h)(0x69B8F5BE)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h)(0x69B8F5BE)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h)(0x69B8F5BE)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x69B8F5BE)
-F (../Core/Src/freertos.c)(0x6A6C497D)(--c99 -c --cpu Cortex-M3 -D__EVAL -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3 -I ../APP/Inc-I.\RTE\_FocTest-ID:\software\keil\keil_v5\Arm\Packs\ARM\CMSIS\6.3.0\CMSIS\Core\Include-ID:\software\keil\keil_v5\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="540" -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o foctest\freertos.o --omf_browse foctest\freertos.crf --depend foctest\freertos.d)
+F (../Core/Src/freertos.c)(0x6A700B45)(--c99 -c --cpu Cortex-M3 -D__EVAL -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3 -I ../APP/Inc-I.\RTE\_FocTest-ID:\software\keil\keil_v5\Arm\Packs\ARM\CMSIS\6.3.0\CMSIS\Core\Include-ID:\software\keil\keil_v5\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="540" -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o foctest\freertos.o --omf_browse foctest\freertos.crf --depend foctest\freertos.d)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x69B8F5C1)
 I (D:\software\keil\keil_v5\ARM\ARMCC\include\stddef.h)(0x5E53505C)
 I (D:\software\keil\keil_v5\ARM\ARMCC\include\stdint.h)(0x5E53505C)
@@ -142,11 +142,9 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x69B8F5C1)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h)(0x69B8F5C1)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h)(0x69B8F5C1)
 I (D:\software\keil\keil_v5\ARM\ARMCC\include\stdio.h)(0x5E53505C)
-I (../APP/Inc/AS5600.h)(0x6A6B126D)
-I (../Core/Inc/i2c.h)(0x69C099FE)
 I (../APP/Inc/INA240.h)(0x6A6C4644)
 I (../Core/Inc/adc.h)(0x69B8F5C4)
-I (../APP/Inc/MotorPWM.h)(0x6A6C4964)
+I (../APP/Inc/MotorPWM.h)(0x6A700B42)
 I (../Core/Inc/tim.h)(0x69B8F5C5)
 F (../Core/Src/adc.c)(0x69B8F5C4)(--c99 -c --cpu Cortex-M3 -D__EVAL -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3 -I ../APP/Inc-I.\RTE\_FocTest-ID:\software\keil\keil_v5\Arm\Packs\ARM\CMSIS\6.3.0\CMSIS\Core\Include-ID:\software\keil\keil_v5\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="540" -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o foctest\adc.o --omf_browse foctest\adc.crf --depend foctest\adc.d)
 I (../Core/Inc/adc.h)(0x69B8F5C4)
@@ -532,8 +530,8 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h)(0x69B8F5BE)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h)(0x69B8F5BE)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h)(0x69B8F5BE)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x69B8F5BE)
-F (../APP/Src/MotorPWM.c)(0x6A6C497A)(--c99 -c --cpu Cortex-M3 -D__EVAL -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3 -I ../APP/Inc-I.\RTE\_FocTest-ID:\software\keil\keil_v5\Arm\Packs\ARM\CMSIS\6.3.0\CMSIS\Core\Include-ID:\software\keil\keil_v5\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="540" -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o foctest\motorpwm.o --omf_browse foctest\motorpwm.crf --depend foctest\motorpwm.d)
-I (../APP/Inc/MotorPWM.h)(0x6A6C4964)
+F (../APP/Src/MotorPWM.c)(0x6A700B42)(--c99 -c --cpu Cortex-M3 -D__EVAL -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3 -I ../APP/Inc-I.\RTE\_FocTest-ID:\software\keil\keil_v5\Arm\Packs\ARM\CMSIS\6.3.0\CMSIS\Core\Include-ID:\software\keil\keil_v5\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="540" -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o foctest\motorpwm.o --omf_browse foctest\motorpwm.crf --depend foctest\motorpwm.d)
+I (../APP/Inc/MotorPWM.h)(0x6A700B42)
 I (../Core/Inc/tim.h)(0x69B8F5C5)
 I (../Core/Inc/main.h)(0x69B8F5C6)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x69B8F5BE)

@@ -26,10 +26,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
-#include "AS5600.h"
 #include "INA240.h"
 #include "MotorPWM.h"
-#include "i2c.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -106,7 +104,7 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 256);
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 512);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -125,32 +123,25 @@ void MX_FREERTOS_Init(void) {
 void StartDefaultTask(void const * argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
-  HAL_StatusTypeDef ready1, ready2;
-  uint16_t ina_raw[INA240_CH_NUM];
-
-  ready1 = HAL_I2C_IsDeviceReady(&hi2c1, AS5600_I2C_ADDR << 1, 3, 100);
-  ready2 = HAL_I2C_IsDeviceReady(&hi2c2, AS5600_I2C_ADDR << 1, 3, 100);
-  printf("I2C1 AS5600: %s, I2C2 AS5600: %s\r\n",
-         (ready1 == HAL_OK) ? "OK" : "FAIL",
-         (ready2 == HAL_OK) ? "OK" : "FAIL");
+  uint32_t print_div = 0;
 
   INA240_Init();
   MotorPWM_Init();
-  printf("MotorPWM started, duty=0\r\n");
+
+  /* 静态测压：M0 三相占空比=1（HIN=LIN=1 → 上管开） */
+  MotorPWM_M0_HoldDuty(1.0f, 1.0f, 1.0f);
+  printf("M0 ALL HIGH (duty=1). Measure motor U/V/W vs GND ~= Vbus\r\n");
+  printf("Then change code to 0,0,0 and reflash: should ~= 0V\r\n");
 
   /* Infinite loop */
   for(;;)
   {
-    uint16_t angle1 = AS5600_GetAngle1();
-    uint16_t angle2 = AS5600_GetAngle2();
-    INA240_ReadAllRaw(ina_raw);
-
-    printf("AS5600_1: %u, AS5600_2: %u\r\n", angle1, angle2);
-    /* PB1, PB0, PA4, PA5 原始 ADC(0~4095), 约 mV = raw*3300/4095 */
-    printf("INA240: %u %u %u %u\r\n",
-           ina_raw[INA240_CH1], ina_raw[INA240_CH2],
-           ina_raw[INA240_CH3], ina_raw[INA240_CH4]);
-    osDelay(200);
+    if (++print_div >= 1000U)
+    {
+      print_div = 0;
+      printf("holding M0=1,1,1 (no six-step)\r\n");
+    }
+    osDelay(1);
   }
   /* USER CODE END StartDefaultTask */
 }

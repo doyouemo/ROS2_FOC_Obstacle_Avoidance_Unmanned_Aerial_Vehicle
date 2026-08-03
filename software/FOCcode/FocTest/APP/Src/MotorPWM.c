@@ -1,5 +1,15 @@
 #include "MotorPWM.h"
 
+/* 慢速六步：每扇区停留时间(s)，便于对照串口扇区号 */
+#define OL_SECTOR_HOLD_S  1.5f
+/* 开环幅值硬限制，防堵转大电流 */
+#define OL_AMP_MAX        0.12f
+
+static float s_ol_amp;
+static float s_ol_hold_t;
+static uint8_t s_ol_sector;
+static uint8_t s_ol_enable;
+
 static uint16_t MotorPWM_DutyToCcr(float duty)
 {
   if (duty < 0.0f)
@@ -14,18 +24,35 @@ static uint16_t MotorPWM_DutyToCcr(float duty)
   return (uint16_t)(duty * (float)MOTOR_PWM_PERIOD + 0.5f);
 }
 
+static void MotorPWM_ApplySixStepSector(uint8_t sector, float amp)
+{
+  const float hi = 0.5f + amp;
+  const float lo = 0.5f - amp;
+
+  sector %= 6U;
+
+  switch (sector)
+  {
+    case 0: MotorPWM_SetDuty(MOTOR_1, hi, lo, lo); break;
+    case 1: MotorPWM_SetDuty(MOTOR_1, hi, hi, lo); break;
+    case 2: MotorPWM_SetDuty(MOTOR_1, lo, hi, lo); break;
+    case 3: MotorPWM_SetDuty(MOTOR_1, lo, hi, hi); break;
+    case 4: MotorPWM_SetDuty(MOTOR_1, lo, lo, hi); break;
+    default: MotorPWM_SetDuty(MOTOR_1, hi, lo, hi); break;
+  }
+
+  MotorPWM_SetDuty(MOTOR_2, 0.5f, 0.5f, 0.5f);
+}
+
 void MotorPWM_Init(void)
 {
-  /* 保证 TIM2/TIM3 同频同周期 */
   __HAL_TIM_SET_AUTORELOAD(&htim2, MOTOR_PWM_PERIOD);
   __HAL_TIM_SET_AUTORELOAD(&htim3, MOTOR_PWM_PERIOD);
   htim2.Init.Period = MOTOR_PWM_PERIOD;
   htim3.Init.Period = MOTOR_PWM_PERIOD;
 
-  /* 启动前占空比清零 */
   MotorPWM_StopAll();
 
-  /* M1: TIM2 CH1~3；M2: TIM2 CH4 + TIM3 CH1/CH2 */
   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
@@ -33,7 +60,6 @@ void MotorPWM_Init(void)
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
 
-  /* 对齐计数器后同时开启，减小 M2 跨定时器相位差 */
   __HAL_TIM_DISABLE(&htim2);
   __HAL_TIM_DISABLE(&htim3);
   __HAL_TIM_SET_COUNTER(&htim2, 0);
@@ -64,6 +90,65 @@ void MotorPWM_SetDuty(MotorId_t motor, float u, float v, float w)
 
 void MotorPWM_StopAll(void)
 {
-  MotorPWM_SetDuty(MOTOR_1, 0.0f, 0.0f, 0.0f);
-  MotorPWM_SetDuty(MOTOR_2, 0.0f, 0.0f, 0.0f);
+  /* 三相都拉到 50%：线电压约 0，比全 0(下管常开) 更利于“断电感” */
+  MotorPWM_SetDuty(MOTOR_1, 0.5f, 0.5f, 0.5f);
+  MotorPWM_SetDuty(MOTOR_2, 0.5f, 0.5f, 0.5f);
+  s_ol_enable = 0U;
+}
+
+void MotorPWM_OpenLoopM0_Start(float amp, float elec_hz)
+{
+  (void)elec_hz; /* 慢速点动不再用连续电频率，避免失步发热 */
+
+  if (amp < 0.0f)
+  {
+    amp = 0.0f;
+  }
+  else if (amp > OL_AMP_MAX)
+  {
+    amp = OL_AMP_MAX;
+  }
+
+  s_ol_amp = amp;
+  s_ol_sector = 0U;
+  s_ol_hold_t = 0.0f;
+  s_ol_enable = 1U;
+
+  MotorPWM_ApplySixStepSector(s_ol_sector, s_ol_amp);
+}
+
+void MotorPWM_OpenLoopM0_Step(float dt_s)
+{
+  if (!s_ol_enable)
+  {
+    return;
+  }
+
+  s_ol_hold_t += dt_s;
+  if (s_ol_hold_t < OL_SECTOR_HOLD_S)
+  {
+    MotorPWM_ApplySixStepSector(s_ol_sector, s_ol_amp);
+    return;
+  }
+
+  s_ol_hold_t = 0.0f;
+  s_ol_sector++;
+  if (s_ol_sector >= 6U)
+  {
+    s_ol_sector = 0U;
+  }
+
+  MotorPWM_ApplySixStepSector(s_ol_sector, s_ol_amp);
+}
+
+uint8_t MotorPWM_OpenLoopM0_GetSector(void)
+{
+  return s_ol_sector;
+}
+
+void MotorPWM_M0_HoldDuty(float u, float v, float w)
+{
+  s_ol_enable = 0U; /* 停开环，避免覆盖静态占空比 */
+  MotorPWM_SetDuty(MOTOR_1, u, v, w);
+  MotorPWM_SetDuty(MOTOR_2, 0.5f, 0.5f, 0.5f);
 }
