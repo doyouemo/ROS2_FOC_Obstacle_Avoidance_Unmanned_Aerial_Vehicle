@@ -1,0 +1,475 @@
+CH340               
+
+                             USB  CH340
+
+                                                              
+                                                           3D
+                                                       https://wch.cn
+
+1
+
+      CH340  USB  USB  USB 
+      CH340  MODEM 
+ USB  USB CH340DS2
+
+        USB             UART/RS232/RS485
+                       USB 
+             CH340
+
+             
+
+USB 
+
+2
+
+       USB  USB V2.0
+       USB 
+       Windows 
+       50bps2Mbps
+       MODEM  RTSDTRDCDRIDSRCTS
+       RS232RS485RS422 
+      CH340R  IrDA  SIR  2400bps  115200bps
+       CH341 CH341  VCP 
+       5V  3.3V 
+      CH340C/N/K/E/X/B CH340B  EEPROM 
+       SOP-16SOP-8  SSOP-20  ESSOP-10MSOP-10  RoHS
+
+3
+CH340                         
+
+                                            
+
+   SOP-16  3.9mm 150mil 1.27mm 50mil   16     CH340G
+
+   SOP-16  3.9mm 150mil 1.27mm 50mil   16     CH340C
+
+   SOP-16  3.9mm 150mil 1.27mm 50mil   16     CH340B
+
+    SOP-8  3.9mm 150mil 1.27mm 50mil   8      CH340N
+
+ESSOP-10 3.9mm 150mil 1.00mm 39mil  10  CH340K
+
+MSOP-10 3.0mm 118mil 0.50mm 19.7mil  10       CH340E
+
+MSOP-10 3.0mm 118mil 0.50mm 19.7mil  10       CH340X
+
+SSOP-20 5.3mm 209mil 0.65mm 25mil      20     CH340T
+
+SSOP-20 5.3mm 209mil 0.65mm 25mil      20     CH340R
+
+CH340CCH340NCH340KCH340ECH340X  CH340B 
+
+    CH340B  EEPROM  CH343P
+
+    CH340K  MCU  I/O  CH340 
+
+    CH340K  0# GND3# GND 
+
+    CH340X  CH340E  3.3V  IO  5V 
+
+    CH340X  6# 6# TNOW  DTR# 5.3 
+
+    CH340C  4  3  B40 8# 4.7K  DTR#
+
+    CH340R  TXD  MODEM 
+
+    CH340  USB  USB2.0 UD+ UD-
+
+4
+
+SSOP20 SOP16 ESSOP10 SOP8        ( CH340R )
+    
+
+19 16      7   5 VCC   0.1uF 
+
+8   1 30 3 GND                   USB 
+
+5   4      10  8  V3             3.3V  VCC 
+                                 5V  0.1uF 
+
+                  XI                  CH340T/R/G
+                                          12MHz 
+
+9   7           NC.                   CH340C
+
+                  RST#                 CH340B
+                                      
+
+                  XO                  CH340T/R/G
+                                          12MHz 
+
+10  8             OUT#          CH340CMODEM 
+                               CH340C  DTR#
+
+                  NC.                 CH340B
+
+6   5      1   1 UD+ USB   USB  D+
+
+7   6      2   2 UD- USB   USB  D-
+
+20              NOS#   USB 
+
+3   2      8   6 TXD            (CH340R )
+
+4   3      9   7 RXD  
+
+11  9      5    CTS#  MODEM ()
+
+12 10           DSR#  MODEM ()
+
+13 11           RI#  MODEM ()
+
+14 12           DCD#  MODEM ()
+CH340                
+
+15 13   4   DTR#  MODEM ()
+
+16 14   6  4 RTS#  MODEM ()
+
+2           ACT#       USB 
+
+18 15       R232       CH340T/R/G/C RS232 
+                              
+
+             TNOW    CH340T/E/X/B
+                       CH340X  DTR#
+17 15      
+                       CH340R
+             IR#        SIR 
+
+1            CKO           CH340T
+             NC.       CH340R
+
+CH340  I/O  CH340T  CH340G/C/N/K/E/X/B 
+
+5
+
+5.1. 
+
+      CH340G/CH340T/CH340R  XI  12MHz 
+ CH340  XI  XO 
+ 12MHz  XI  XO 
+
+      CH340C/N/K/E/X/B 
+      CH340 CH340B 
+      CH340  5V  3.3V  5V CH340  VCC 
+ 5V  V3  0.1uF  3.3V 
+CH340  V3  VCC  3.3V  CH340 
+ 3.3V
+      CH340X  4  CH340C/N  IO  5V 
+      CH340K  CH340 
+      CH340  USB NOS# USB 
+      CH340G/C/T/K  DTR# USB  4.7K
+ USB  USB 
+      CH340  USB UD+ UD- USB 
+       CH340 MODEM 
+      TXD  RXD RXD  CH340G/C/T/R
+ R232  RS232  RXD 
+CH340G/C/N/E/X/B/T  TXD CH340K  TXD 
+CH340R  TXD 
+      MODEM CTS#DSR#RI#DCD#DTR#RTS#
+CH340C  OUT# MODEM 
+      IR#R232 CKO ACT#TNOW IR#
+R232  RS232 R232  RXD 
+ACT# USB  USB TNOW  CH340
+ RS485 TNOW 
+IR# R232 
+
+5.2. CH340B 
+
+      CH340B  EEPROM 
+
+CH340         
+
+                                                 
+
+   00H  SIG          CH340B 5BH                    00H
+                   CH340H/S 53H
+   01H  MODE                                       23H
+   02H  CFG                                        FEH
+   03H   WP                             23H        00H
+05H04H  VID    5 0=1=
+07H06H  PID        57H                            1A86H
+   0AH  PWR           Vendor ID
+17H10H   SN         0000H  0FFFFH  VID  PID       7523H
+                       Product ID                  31H
+3FH1AH  PROD              Max Power 2mA 
+                  Serial Number ASCII  8        12345678
+                      ASCII 21H7FH
+                CH340BProduct String Unicode    00H
+                26H 03H                         
+                  Unicode                       
+                                               00H  FFH
+                                             
+
+5.3. DTR  MCU 
+
+       CH340X6# TNOW TNOW 
+ 6# TNOW  DTR#
+
+       6# 4.7K  GND DTR 6#
+ DTR# MCU  BOOT  DTR#
+ DTR# DTR# MCU 
+
+       6# 5# 4.7K  DTR 6#
+ DTR# MCU  DTR#
+ DTR# MCU 
+
+       4  3  B40  CH340C8# OUT#
+ MODEM  OUT# 8# 4.7K  DTR 
+8# DTR# MCU  BOOT  DTR#
+ DTR# DTR#
+ MCU 13# DTR# DTR# MCU 
+
+5.4. 
+
+      CH340  1
+567  8 1  2 ///
+CH340 5075100110134.51503006009001200
+180024003600480096001440019200288003360038400560005760076800115200
+12800015360023040046080092160015000002000000 
+
+       1Mbps  500Kbps  CH343 
+      CH340  2CH340G/CH340T/CH340R 
+ 0.3CH340C/340N/340K/340E/340X/340B  1.8
+       Windows CH340 
+
+      CH340  USB 
+ RS232RS485RS422 
+      CH340R  USB  SIR 
+CH340                     
+
+ IrDA 
+
+6
+
+6.1. 
+
+                                                           
+                                             -40     85     
+ TA           CH340G/T/R                     -20     70     
+                                             -55    125     
+ TS         CH340C/N/K/E/X/B                -0.5    6.0      V
+VCC                                         -0.5             V
+VIO                                               VCC+0.5
+
+        VCC GND 
+
+        
+
+6.2. 5V TA=25VCC=5V USB 
+
+                                                           
+VCC                                 4.0       5     5.3      V
+       V3  VCC                                7      20     mA
+ICC                                   0       6      15     mA
+            CH340G/C/N/K/E/X/T/R    2.3             0.2     mA
+ISLP                                        0.09   0.15     mA
+            CH340B                VCC-0.6   0.05    0.9      V
+VIL                                   3             VCC      V
+VIH   USB   CH340G/K/T/R/B          -40      150    0.5      V
+VOL                                 2.4     -100
+            CH340C/N/E/X                     2.6    300      V
+VOH                                                -300
+                                                    2.8     uA
+IUP                                                         uA
+IDN                                                          V
+ VR
+      6mA 
+
+      2mA 
+
+       100uA 
+
+      
+
+      
+
+        
+
+6.3. 3.3V TA=25VCC=V3=3.3V USB 
+
+                                                           
+VCC                                 2.9      3.3    3.6
+       V3  CH340G/T/R               3.1      3.3    3.6      V
+ICC                                           4      12
+       VCC  CH340C/N/K/E/X/B          0       3      9      mA
+ISLP                                1.9     0.08    0.2     mA
+VIL         CH340G/C/N/K/E/X/T/R            0.04   0.15     mA
+VIH                               VCC-0.6           0.8     mA
+VOL           CH340B                  3       70    VCC      V
+VOH                                 -30      -70    0.5      V
+IUP   USB   CH340G/K/T/R/B          2.4      2.6             V
+IDN                                                 200
+ VR         CH340C/N/E/X                           -200      V
+                                                    2.8
+                                                            uA
+                                                            uA
+                                                             V
+
+      4mA 
+
+      2mA 
+
+       40uA 
+
+      
+
+      
+
+        
+CH340                    
+
+6.4. TA=25VCC=5V  3.3V
+
+                                                        
+                                    -1.2  ±0.8    +1.2    %
+ FD    CH340C/N/K/E/X/B  TA=-555
+                         TA=-2575   -1.8  ±1.0    +1.8    %
+FCLK                               11.98  12.00  12.02  MHz
+TPR                                                      mS
+        XI                            20     35     50
+
+        
+
+7
+
+7.1. USB  9 
+
+       CH340T CH340C/B USB  RS232 CH340  MODEM
+ U8  TTL  RS232  P11  DB9 
+ 9 U8  MAX213/ADM213/SP213/MAX211 
+
+       USB  TTL  U8  C46/C47/C48/C49/C40
+ RXDTXD 
+
+      P2  USB USB  5V +5V 
+D+D-USB  500mA
+CH340  USB  USB  5V  USB 
+ CH340  USB 
+I/O  USB  1  USB 
+ 5V  USB  5V 
+
+      V3  C8  0.1F CH340  3.3V C9  0.1F
+
+
+       CH340G/T/R  X2 C6  C7 X2  12MHz 
+C6  C7  33pF  X2  C6  C7
+ 47pF C6 
+
+       CH340C/N/K/E/X/B  X2  C6  C7
+       PCB  C8  C9  CH340  D+
+D- XI 
+XO 
+CH340   
+
+7.2. USB  RS232 
+
+       USB  3  RS232 U5  MAX232/ICL232/SP232 
+      CH340  CH340C/N/K/E/X/B  X4  C21  C22
+
+7.3. USB  RS232 
+
+       USB  3  RS232  7.2. RS232 
+CH340  R232  RS232 
+ 7.2. U5
+
+7.4. USB  RS485 
+
+       TNOW  RS485  DE RE#
+CH340      
+
+7.5. USB 
+
+       USB  IrDA  CH340R  U14ZHX1810/HSDL3000 
+ USB  R13 
+ R14  U14 
+
+7.6. 
+
+       MCU  TTL  CH340  USB 
+VCC  5V  3.3VVCC  3.3V  V3  VCC USB 
+ VBUS MCU  I/O CH340  MCU  VCC
+ CH340  MCU  I/O 
+
+      CH340  CH340C/N/K/E/X/B  X6  C17  C18
+
+7.7.  MCU
+CH340   
+
+       MCU  TTL  CH340  USB CH340
+ USB  VBUSMCU  VDDVDD  5V3.3V  2.5V1.8V
+
+       MCU  RXD  RXD  2K22K
+ MCU  VDD
+
+       CH340  MCU  D6  D7  NMOS  Q5 
+CH340  MCU  RXD  TXD  MCU D7  RTS/BOOT0#
+ D6  CH340  TXD  MCU  RXD  MCU 
+ D7  CH340  RTS  MCU  BOOT  MCU NMOS  Q5
+ CH340  RXD  MCU  TXD  MCU 
+
+       CH340  MCU CH340KCH340X  4  CH340CCH340N  IO 
+ CH340  MCU  D6D7  Q5  CH340
+ MCU 
+
+       CH340 NMOS 
+ Q5  D  CH340  RXD D6 
+CH340  NMOS  D6 CH340  VCC
+
+       NMOS  MCU  IO 
+ 5VT MCU  CH340  MCU  D6D7Q5
+
+
+       Schottky  BAS70BAT54 B0520 
+      NMOS  NMOS  2SK30181012 
+       CH340  MCU  CH340K 
+ VIO  I/O  USB  CH343
+
+7.8.  MCU
+
+       MCU  TTL  CH340K  USB CH340K
+ USB  VBUSVCCMCU  VDDVDD  5V3.3V  2.5V1.8VCH340K
+ GND  PCB  GND 
+
+      CH340K  TXD  RTS# RXD 
+ 75K
+ CH340K  MCU CH340K  MCU 
+ CH340K  CH340K  MCU  150A
+
+      CH340X  4  CH340CCH340N  MCU  CH340 
+ CH340  USB  MCU 
+
+       CH340K  MCU  7.7  NMOS 
+       120Kbps  MCU  RX  2K22K
+ VIO  I/O  USB 
+      CH340K  DTR#CTS#
+ MCU
+      DTR# VCC  VDD  4 T4 
+CH340       
+
+Q1 Q1  Vth  N-MOSFETVDD  VCC-0.8V 200mA
+T6  Q3  D10  VDD  VCC 
+
+7.9.  USB 
+
+       USB  MCU 
+       MCU MCU NRST BOOT0
+ Boot-Loader  32F103 
+       CH340X4.7K  35.6K MCU  BOOT0 
+ 4  3  B40  CH340C OUT# DTR# BOOT0
+       BOOT  MCU CH340C/G  DTR#
+ 6# 5# CH340X  DTR# DTR 
+      MCU  CH340X  DTR 6# DTR#DTR#
+BOOT0 RTS#MCU 
+       DTR# RTS#
+MCU  BOOT  DTR# RTS#MCU
+ DTR#MODEM 
+      CH340X  MCU  5V  3.3V  CH340X  uA 
+
+      CH340X  USB  VBUS  MCU CH340X 
+ MCU  IO MCU  USB  MCU  MCU 
+ CH340  MCU  7.7  NMOS 
+       NRST  RTS# NRST  12K 
+ NRST 
+
