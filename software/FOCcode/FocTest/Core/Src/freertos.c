@@ -124,22 +124,32 @@ void StartDefaultTask(void const * argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
   uint32_t print_div = 0;
+  uint16_t ina[INA240_CH_NUM];
 
   INA240_Init();
   MotorPWM_Init();
 
-  /* 静态测压：M0 三相占空比=1（HIN=LIN=1 → 上管开） */
-  MotorPWM_M0_HoldDuty(1.0f, 1.0f, 1.0f);
-  printf("M0 ALL HIGH (duty=1). Measure motor U/V/W vs GND ~= Vbus\r\n");
-  printf("Then change code to 0,0,0 and reflash: should ~= 0V\r\n");
+  /* 三相同频正弦，相位差 120°。amp=0.20 → 占空比在 0.30~0.70 之间摆 */
+  MotorPWM_OpenLoopM0_Start(0.20f, 15.0f);
 
-  /* Infinite loop */
+  printf("\r\n=== M0+M1 sine PWM amp=0.20 elec=15Hz (120deg) ===\r\n");
+  printf("Both motors. TIM2=M0 + M1_U, TIM3=M1_V/W. Not advanced timer.\r\n\r\n");
+
   for(;;)
   {
-    if (++print_div >= 1000U)
+    MotorPWM_OpenLoopM0_Step(0.001f);
+
+    if (++print_div >= 300U)
     {
       print_div = 0;
-      printf("holding M0=1,1,1 (no six-step)\r\n");
+      INA240_ReadAllRaw(ina);
+      printf("M1 sector=%u | CCR=%lu/%lu/%lu | INA %u/%u %u/%u\r\n",
+             (unsigned)MotorPWM_OpenLoopM0_GetSector(),
+             (unsigned long)__HAL_TIM_GET_COMPARE(&htim2, TIM_CHANNEL_4),
+             (unsigned long)__HAL_TIM_GET_COMPARE(&htim3, TIM_CHANNEL_1),
+             (unsigned long)__HAL_TIM_GET_COMPARE(&htim3, TIM_CHANNEL_2),
+             (unsigned)ina[0], (unsigned)ina[1],
+             (unsigned)ina[2], (unsigned)ina[3]);
     }
     osDelay(1);
   }

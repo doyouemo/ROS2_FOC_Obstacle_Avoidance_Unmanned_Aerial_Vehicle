@@ -1,13 +1,14 @@
 #include "MotorPWM.h"
+#include <math.h>
 
-/* 慢速六步：每扇区停留时间(s)，便于对照串口扇区号 */
-#define OL_SECTOR_HOLD_S  1.5f
-/* 开环幅值硬限制，防堵转大电流 */
-#define OL_AMP_MAX        0.12f
+/* 正弦幅值上限：duty = 0.5 ± amp，三相同一频率，相位差 120° */
+#define OL_AMP_MAX        0.40f
+#define OL_TWO_PI         6.28318530718f
+#define OL_DEG120         (OL_TWO_PI / 3.0f)
 
 static float s_ol_amp;
-static float s_ol_hold_t;
-static uint8_t s_ol_sector;
+static float s_ol_hz;
+static float s_ol_theta;
 static uint8_t s_ol_enable;
 
 static uint16_t MotorPWM_DutyToCcr(float duty)
@@ -24,32 +25,35 @@ static uint16_t MotorPWM_DutyToCcr(float duty)
   return (uint16_t)(duty * (float)MOTOR_PWM_PERIOD + 0.5f);
 }
 
-static void MotorPWM_ApplySixStepSector(uint8_t sector, float amp)
+/*
+ * 开环正弦（FOC 电压部分）：载波都是 20kHz。
+ * 三相基波频率相同，只是时序相差 120°。
+ *   U = 0.5 + amp·sin(θ)
+ *   V = 0.5 + amp·sin(θ - 120°)
+ *   W = 0.5 + amp·sin(θ + 120°)
+ */
+static void MotorPWM_ApplySine(float theta, float amp)
 {
-  const float hi = 0.5f + amp;
-  const float lo = 0.5f - amp;
+  const float u = 0.5f + amp * sinf(theta);
+  const float v = 0.5f + amp * sinf(theta - OL_DEG120);
+  const float w = 0.5f + amp * sinf(theta + OL_DEG120);
 
-  sector %= 6U;
-
-  switch (sector)
-  {
-    case 0: MotorPWM_SetDuty(MOTOR_1, hi, lo, lo); break;
-    case 1: MotorPWM_SetDuty(MOTOR_1, hi, hi, lo); break;
-    case 2: MotorPWM_SetDuty(MOTOR_1, lo, hi, lo); break;
-    case 3: MotorPWM_SetDuty(MOTOR_1, lo, hi, hi); break;
-    case 4: MotorPWM_SetDuty(MOTOR_1, lo, lo, hi); break;
-    default: MotorPWM_SetDuty(MOTOR_1, hi, lo, hi); break;
-  }
-
-  MotorPWM_SetDuty(MOTOR_2, 0.5f, 0.5f, 0.5f);
+  MotorPWM_SetDuty(MOTOR_1, u, v, w);
+  MotorPWM_SetDuty(MOTOR_2, u, v, w);
 }
 
 void MotorPWM_Init(void)
 {
-  __HAL_TIM_SET_AUTORELOAD(&htim2, MOTOR_PWM_PERIOD);
-  __HAL_TIM_SET_AUTORELOAD(&htim3, MOTOR_PWM_PERIOD);
+  /* Cube 里 TIM 先按 65535 初始化，这里强制改成 20kHz，并立刻生效 */
+  __HAL_TIM_DISABLE(&htim2);
+  __HAL_TIM_DISABLE(&htim3);
+
   htim2.Init.Period = MOTOR_PWM_PERIOD;
   htim3.Init.Period = MOTOR_PWM_PERIOD;
+  __HAL_TIM_SET_AUTORELOAD(&htim2, MOTOR_PWM_PERIOD);
+  __HAL_TIM_SET_AUTORELOAD(&htim3, MOTOR_PWM_PERIOD);
+  TIM2->EGR = TIM_EGR_UG;
+  TIM3->EGR = TIM_EGR_UG;
 
   MotorPWM_StopAll();
 
@@ -60,8 +64,6 @@ void MotorPWM_Init(void)
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
 
-  __HAL_TIM_DISABLE(&htim2);
-  __HAL_TIM_DISABLE(&htim3);
   __HAL_TIM_SET_COUNTER(&htim2, 0);
   __HAL_TIM_SET_COUNTER(&htim3, 0);
   __HAL_TIM_ENABLE(&htim2);
@@ -90,7 +92,6 @@ void MotorPWM_SetDuty(MotorId_t motor, float u, float v, float w)
 
 void MotorPWM_StopAll(void)
 {
-  /* 三相都拉到 50%：线电压约 0，比全 0(下管常开) 更利于“断电感” */
   MotorPWM_SetDuty(MOTOR_1, 0.5f, 0.5f, 0.5f);
   MotorPWM_SetDuty(MOTOR_2, 0.5f, 0.5f, 0.5f);
   s_ol_enable = 0U;
@@ -98,8 +99,6 @@ void MotorPWM_StopAll(void)
 
 void MotorPWM_OpenLoopM0_Start(float amp, float elec_hz)
 {
-  (void)elec_hz; /* 慢速点动不再用连续电频率，避免失步发热 */
-
   if (amp < 0.0f)
   {
     amp = 0.0f;
@@ -109,12 +108,12 @@ void MotorPWM_OpenLoopM0_Start(float amp, float elec_hz)
     amp = OL_AMP_MAX;
   }
 
+  s_ol_hz = (elec_hz > 0.1f) ? elec_hz : 5.0f;
   s_ol_amp = amp;
-  s_ol_sector = 0U;
-  s_ol_hold_t = 0.0f;
+  s_ol_theta = 0.0f;
   s_ol_enable = 1U;
 
-  MotorPWM_ApplySixStepSector(s_ol_sector, s_ol_amp);
+  MotorPWM_ApplySine(s_ol_theta, s_ol_amp);
 }
 
 void MotorPWM_OpenLoopM0_Step(float dt_s)
@@ -124,31 +123,24 @@ void MotorPWM_OpenLoopM0_Step(float dt_s)
     return;
   }
 
-  s_ol_hold_t += dt_s;
-  if (s_ol_hold_t < OL_SECTOR_HOLD_S)
+  s_ol_theta += OL_TWO_PI * s_ol_hz * dt_s;
+  while (s_ol_theta >= OL_TWO_PI)
   {
-    MotorPWM_ApplySixStepSector(s_ol_sector, s_ol_amp);
-    return;
+    s_ol_theta -= OL_TWO_PI;
   }
 
-  s_ol_hold_t = 0.0f;
-  s_ol_sector++;
-  if (s_ol_sector >= 6U)
-  {
-    s_ol_sector = 0U;
-  }
-
-  MotorPWM_ApplySixStepSector(s_ol_sector, s_ol_amp);
+  MotorPWM_ApplySine(s_ol_theta, s_ol_amp);
 }
 
 uint8_t MotorPWM_OpenLoopM0_GetSector(void)
 {
-  return s_ol_sector;
+  return (uint8_t)(s_ol_theta / (OL_TWO_PI / 6.0f));
 }
 
 void MotorPWM_M0_HoldDuty(float u, float v, float w)
 {
-  s_ol_enable = 0U; /* 停开环，避免覆盖静态占空比 */
+  s_ol_enable = 0U;
+  /* 两路电机同时锁死，避免只测 M1 时其实没驱动 */
   MotorPWM_SetDuty(MOTOR_1, u, v, w);
-  MotorPWM_SetDuty(MOTOR_2, 0.5f, 0.5f, 0.5f);
+  MotorPWM_SetDuty(MOTOR_2, u, v, w);
 }
