@@ -1,24 +1,3 @@
-/* USER CODE BEGIN Header */
-/**
-  ******************************************************************************
-  * @file    FOC.h
-  * @brief   This file contains all the function prototypes for
-  *          the FOC.c file
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2026 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
-/* USER CODE END Header */
-
-/* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __FOC_H__
 #define __FOC_H__
 
@@ -26,24 +5,28 @@
 extern "C" {
 #endif
 
-/* Includes ------------------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
-#include <math.h>
-/* USER CODE END Includes */
+#include <stdint.h>
 
-/* USER CODE BEGIN Private defines */
+/* KEY1/2/3：停止 / 两台均速 / 锁当前位置。各环输出都是 Uq（电压型）。 */
+typedef enum {
+  FOC_MODE_STOP = 0,    /* KEY1：Uq=0，电机无力矩 */
+  FOC_MODE_SPEED,       /* KEY2：两台按同一机械角速度转 */
+  FOC_MODE_POSITION     /* KEY3：切入时记下当前角，拧开会往回拉 */
+} FOC_Mode_t;
 
-/* USER CODE END Private defines */
-
-/* USER CODE BEGIN FunctionPrototypes */
-
-void _clack(float a, float b, float c, float *alpha, float *beta);
+void _clack(float a, float b, float c, float *alpha, float *beta); /* Clarke */
 void _park(float alpha, float beta, float theta, float *d, float *q);
+void _inv_park(float d, float q, float theta, float *alpha, float *beta);
 
-/* USER CODE END FunctionPrototypes */
+void FOC_Init(void);
+void FOC_BeginAlign(void);   /* 给固定电角度电压，把转子拉到对齐位置 */
+void FOC_FinishAlign(void);  /* 记下此时编码器角作为电角度零点 */
+void FOC_SetMode(FOC_Mode_t mode);
+FOC_Mode_t FOC_GetMode(void);
+void FOC_Step(float dt_s);   /* 1kHz 调用：读传感器、跑当前环、写 PWM */
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /*__ FOC_H__ */
+#endif /* __FOC_H__ */

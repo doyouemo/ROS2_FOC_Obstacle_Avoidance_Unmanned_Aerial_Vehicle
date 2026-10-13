@@ -52,3 +52,5 @@ foctest\freertos.o: ../APP/Inc/INA240.h
 foctest\freertos.o: ../Core/Inc/adc.h
 foctest\freertos.o: ../APP/Inc/MotorPWM.h
 foctest\freertos.o: ../Core/Inc/tim.h
+foctest\freertos.o: ../APP/Inc/FOC.h
+foctest\freertos.o: ../Core/Inc/gpio.h

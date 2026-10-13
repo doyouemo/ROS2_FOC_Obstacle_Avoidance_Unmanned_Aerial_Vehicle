@@ -24,6 +24,7 @@ void MotorPWM_StopAll(void);
 void MotorPWM_OpenLoopM0_Start(float pwm, float elec_hz);
 void MotorPWM_OpenLoopM0_Step(float dt_s);
 uint8_t MotorPWM_OpenLoopM0_GetSector(void);
+void MotorPWM_OpenLoop_SetDir(int8_t dir);
 
 /* 静态电平：测 EG2133 后级。duty=1 三相拉高，duty=0 三相拉低 */
 void MotorPWM_M0_HoldDuty(float u, float v, float w);

@@ -13,6 +13,7 @@
 "foctest\stm32f1xx_hal_msp.o"
 "foctest\stm32f1xx_hal_timebase_tim.o"
 "foctest\as5600.o"
+"foctest\foc.o"
 "foctest\ina240.o"
 "foctest\motorpwm.o"
 "foctest\stm32f1xx_hal_gpio_ex.o"

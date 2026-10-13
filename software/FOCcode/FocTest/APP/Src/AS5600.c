@@ -24,9 +24,9 @@ uint16_t AS5600_GetAngle1(void)
   uint8_t angle_h, angle_l;
   uint16_t angle = 0;
 
-  if (HAL_I2C_Mem_Read(&hi2c1, AS5600_I2C_ADDR << 1, AS5600_ANGLE_REG_H, I2C_MEMADD_SIZE_8BIT, &angle_h, 1, 100) == HAL_OK)
+  if (HAL_I2C_Mem_Read(&hi2c1, AS5600_I2C_ADDR << 1, AS5600_ANGLE_REG_H, I2C_MEMADD_SIZE_8BIT, &angle_h, 1, 2) == HAL_OK)
   {
-    if (HAL_I2C_Mem_Read(&hi2c1, AS5600_I2C_ADDR << 1, AS5600_ANGLE_REG_L, I2C_MEMADD_SIZE_8BIT, &angle_l, 1, 100) == HAL_OK)
+    if (HAL_I2C_Mem_Read(&hi2c1, AS5600_I2C_ADDR << 1, AS5600_ANGLE_REG_L, I2C_MEMADD_SIZE_8BIT, &angle_l, 1, 2) == HAL_OK)
     {
       angle = ((angle_h & 0x0F) << 8) | angle_l;
     }
@@ -42,9 +42,9 @@ uint16_t AS5600_GetAngle2(void)
   uint8_t angle_h, angle_l;
   uint16_t angle = 0;
 
-  if (HAL_I2C_Mem_Read(&hi2c2, AS5600_I2C_ADDR << 1, AS5600_ANGLE_REG_H, I2C_MEMADD_SIZE_8BIT, &angle_h, 1, 100) == HAL_OK)
+  if (HAL_I2C_Mem_Read(&hi2c2, AS5600_I2C_ADDR << 1, AS5600_ANGLE_REG_H, I2C_MEMADD_SIZE_8BIT, &angle_h, 1, 2) == HAL_OK)
   {
-    if (HAL_I2C_Mem_Read(&hi2c2, AS5600_I2C_ADDR << 1, AS5600_ANGLE_REG_L, I2C_MEMADD_SIZE_8BIT, &angle_l, 1, 100) == HAL_OK)
+    if (HAL_I2C_Mem_Read(&hi2c2, AS5600_I2C_ADDR << 1, AS5600_ANGLE_REG_L, I2C_MEMADD_SIZE_8BIT, &angle_l, 1, 2) == HAL_OK)
     {
       angle = ((angle_h & 0x0F) << 8) | angle_l;
     }

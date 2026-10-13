@@ -28,6 +28,8 @@
 #include <stdio.h>
 #include "INA240.h"
 #include "MotorPWM.h"
+#include "FOC.h"
+#include "gpio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -124,32 +126,76 @@ void StartDefaultTask(void const * argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
   uint32_t print_div = 0;
-  uint16_t ina[INA240_CH_NUM];
+  uint8_t key_stable[3] = {1U, 1U, 1U}; /* 1=未按下（高电平） */
+  uint8_t key_cnt[3] = {0};
 
   INA240_Init();
   MotorPWM_Init();
+  FOC_Init();
 
-  /* 三相同频正弦，相位差 120°。amp=0.20 → 占空比在 0.30~0.70 之间摆 */
-  MotorPWM_OpenLoopM0_Start(0.20f, 15.0f);
+  /* 对齐时转子会被拉住，轴上不要加负载，编码器必须接上 */
+  printf("\r\nAligning electrical angle, keep shafts free ~0.8s\r\n");
+  FOC_BeginAlign();
+  osDelay(800);
+  FOC_FinishAlign();
+  FOC_SetMode(FOC_MODE_STOP);
 
-  printf("\r\n=== M0+M1 sine PWM amp=0.20 elec=15Hz (120deg) ===\r\n");
-  printf("Both motors. TIM2=M0 + M1_U, TIM3=M1_V/W. Not advanced timer.\r\n\r\n");
+  printf("KEY1 stop  KEY2 speed  KEY3 hold position\r\n");
+  printf("Need AS5600.\r\n\r\n");
 
   for(;;)
   {
-    MotorPWM_OpenLoopM0_Step(0.001f);
+    /* PB3/4/5 = KEY1/2/3，外部上拉，按下为低 */
+    const uint8_t raw[3] = {
+      (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_3) == GPIO_PIN_RESET) ? 1U : 0U,
+      (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4) == GPIO_PIN_RESET) ? 1U : 0U,
+      (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5) == GPIO_PIN_RESET) ? 1U : 0U
+    };
+    uint8_t i;
+    for (i = 0; i < 3U; i++)
+    {
+      if (raw[i] == key_stable[i])
+      {
+        key_cnt[i] = 0;
+      }
+      else if (++key_cnt[i] >= 20U) /* 连续 20ms 才认边沿，消抖 */
+      {
+        key_cnt[i] = 0;
+        key_stable[i] = raw[i];
+        if (raw[i] != 0U)
+        {
+          if (i == 0U)
+          {
+            FOC_SetMode(FOC_MODE_STOP);
+            printf("MODE stop\r\n");
+          }
+          else if (i == 1U)
+          {
+            FOC_SetMode(FOC_MODE_SPEED);
+            printf("MODE speed\r\n");
+          }
+          else
+          {
+            FOC_SetMode(FOC_MODE_POSITION);
+            printf("MODE hold position\r\n");
+          }
+        }
+      }
+    }
+
+    FOC_Step(0.001f); /* 与 osDelay(1) 对应，约 1kHz */
 
     if (++print_div >= 300U)
     {
       print_div = 0;
-      INA240_ReadAllRaw(ina);
-      printf("M1 sector=%u | CCR=%lu/%lu/%lu | INA %u/%u %u/%u\r\n",
-             (unsigned)MotorPWM_OpenLoopM0_GetSector(),
+      printf("mode=%u | M0=%lu/%lu/%lu | M1=%lu/%lu/%lu\r\n",
+             (unsigned)FOC_GetMode(),
+             (unsigned long)__HAL_TIM_GET_COMPARE(&htim2, TIM_CHANNEL_1),
+             (unsigned long)__HAL_TIM_GET_COMPARE(&htim2, TIM_CHANNEL_2),
+             (unsigned long)__HAL_TIM_GET_COMPARE(&htim2, TIM_CHANNEL_3),
              (unsigned long)__HAL_TIM_GET_COMPARE(&htim2, TIM_CHANNEL_4),
              (unsigned long)__HAL_TIM_GET_COMPARE(&htim3, TIM_CHANNEL_1),
-             (unsigned long)__HAL_TIM_GET_COMPARE(&htim3, TIM_CHANNEL_2),
-             (unsigned)ina[0], (unsigned)ina[1],
-             (unsigned)ina[2], (unsigned)ina[3]);
+             (unsigned long)__HAL_TIM_GET_COMPARE(&htim3, TIM_CHANNEL_2));
     }
     osDelay(1);
   }

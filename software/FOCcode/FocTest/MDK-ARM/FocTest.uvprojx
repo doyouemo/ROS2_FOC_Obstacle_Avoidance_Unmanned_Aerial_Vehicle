@@ -720,6 +720,11 @@
               <FilePath>../APP/Src/AS5600.c</FilePath>
             </File>
             <File>
+              <FileName>FOC.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../APP/Src/FOC.c</FilePath>
+            </File>
+            <File>
               <FileName>INA240.c</FileName>
               <FileType>1</FileType>
               <FilePath>../APP/Src/INA240.c</FilePath>
