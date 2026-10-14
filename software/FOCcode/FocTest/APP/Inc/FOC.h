@@ -7,23 +7,32 @@ extern "C" {
 
 #include <stdint.h>
 
-/* KEY1/2/3：停止 / 两台均速 / 锁当前位置。各环输出都是 Uq（电压型）。 */
+/* KEY1/2/3：停止 / 均速 / 锁位置。默认 STOP，电机无力矩。 */
 typedef enum {
-  FOC_MODE_STOP = 0,    /* KEY1：Uq=0，电机无力矩 */
-  FOC_MODE_SPEED,       /* KEY2：两台按同一机械角速度转 */
-  FOC_MODE_POSITION     /* KEY3：切入时记下当前角，拧开会往回拉 */
+  FOC_MODE_STOP = 0,
+  FOC_MODE_SPEED,
+  FOC_MODE_POSITION
 } FOC_Mode_t;
 
-void _clack(float a, float b, float c, float *alpha, float *beta); /* Clarke */
-void _park(float alpha, float beta, float theta, float *d, float *q);
-void _inv_park(float d, float q, float theta, float *alpha, float *beta);
+void FOC_Clarke(float a, float b, float c, float *alpha, float *beta);
+void FOC_InvClarke(float alpha, float beta, float *a, float *b, float *c);
+void FOC_Park(float alpha, float beta, float theta, float *d, float *q);
+void FOC_InvPark(float d, float q, float theta, float *alpha, float *beta);
 
 void FOC_Init(void);
-void FOC_BeginAlign(void);   /* 给固定电角度电压，把转子拉到对齐位置 */
-void FOC_FinishAlign(void);  /* 记下此时编码器角作为电角度零点 */
+void FOC_BeginAlign(void);
+void FOC_FinishAlign(void);
 void FOC_SetMode(FOC_Mode_t mode);
 FOC_Mode_t FOC_GetMode(void);
-void FOC_Step(float dt_s);   /* 1kHz 调用：读传感器、跑当前环、写 PWM */
+void FOC_Step(float dt_s);
+
+/* 日志 / 读数状态：1=本拍该路有效 */
+float FOC_GetIq(uint8_t axis);
+uint16_t FOC_GetAngleRaw(uint8_t axis);
+uint16_t FOC_GetInaRaw(uint8_t ch);
+uint8_t FOC_GetAngleOk(uint8_t axis);
+uint8_t FOC_GetCurrentOk(uint8_t axis); /* 该轴两相电流本拍都成功 */
+float FOC_GetUq(uint8_t axis);
 
 #ifdef __cplusplus
 }

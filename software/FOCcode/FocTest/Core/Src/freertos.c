@@ -26,9 +26,11 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
+#include <string.h>
 #include "INA240.h"
 #include "MotorPWM.h"
 #include "FOC.h"
+#include "AS5600.h"
 #include "gpio.h"
 /* USER CODE END Includes */
 
@@ -49,13 +51,15 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-
+osThreadId motorTaskHandle;
+osThreadId logTaskHandle;
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
-
+void StartMotorTask(void const * argument);
+void StartLogTask(void const * argument);
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void const * argument);
@@ -74,91 +78,84 @@ void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackTy
   *ppxIdleTaskTCBBuffer = &xIdleTaskTCBBuffer;
   *ppxIdleTaskStackBuffer = &xIdleStack[0];
   *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
-  /* place for user code */
 }
 /* USER CODE END GET_IDLE_TASK_MEMORY */
 
-/**
-  * @brief  FreeRTOS initialization
-  * @param  None
-  * @retval None
-  */
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
 
   /* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */
-  /* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
-  /* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* USER CODE BEGIN RTOS_TIMERS */
-  /* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
 
   /* USER CODE BEGIN RTOS_QUEUES */
-  /* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
 
-  /* Create the thread(s) */
-  /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 512);
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityIdle, 0, 128);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
-  /* USER CODE END RTOS_THREADS */
+  osThreadDef(motorTask, StartMotorTask, osPriorityAboveNormal, 0, 512);
+  motorTaskHandle = osThreadCreate(osThread(motorTask), NULL);
 
+  osThreadDef(logTask, StartLogTask, osPriorityLow, 0, 512);
+  logTaskHandle = osThreadCreate(osThread(logTask), NULL);
+  /* USER CODE END RTOS_THREADS */
 }
 
-/* USER CODE BEGIN Header_StartDefaultTask */
-/**
-  * @brief  Function implementing the defaultTask thread.
-  * @param  argument: Not used
-  * @retval None
-  */
-/* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void const * argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
-  uint32_t print_div = 0;
-  uint8_t key_stable[3] = {1U, 1U, 1U}; /* 1=未按下（高电平） */
+  (void)argument;
+  for (;;)
+  {
+    osDelay(1000);
+  }
+  /* USER CODE END StartDefaultTask */
+}
+
+/* USER CODE BEGIN Application */
+
+void StartMotorTask(void const * argument)
+{
+  uint8_t key_stable[3] = {1U, 1U, 1U};
   uint8_t key_cnt[3] = {0};
+  (void)argument;
 
   INA240_Init();
   MotorPWM_Init();
   FOC_Init();
-
-  /* 对齐时转子会被拉住，轴上不要加负载，编码器必须接上 */
-  printf("\r\nAligning electrical angle, keep shafts free ~0.8s\r\n");
-  FOC_BeginAlign();
-  osDelay(800);
-  FOC_FinishAlign();
+  /* 默认 KEY1：不对齐、不加电压，只跑 Step 采数 + 日志 */
   FOC_SetMode(FOC_MODE_STOP);
 
-  printf("KEY1 stop  KEY2 speed  KEY3 hold position\r\n");
-  printf("Need AS5600.\r\n\r\n");
+  printf("\r\nDefault STOP (KEY1). Sensors logged; motor Uq=0.\r\n");
+  printf("KEY1 stop  KEY2 speed  KEY3 position (need good AS5600)\r\n");
+  printf("Full FOC: I->Clarke->Park | PI->Uq->InvPark->SVPWM\r\n");
+  printf("Bad reads ignored (hold last good / Uq=0).\r\n\r\n");
 
-  for(;;)
+  for (;;)
   {
-    /* PB3/4/5 = KEY1/2/3，外部上拉，按下为低 */
     const uint8_t raw[3] = {
       (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_3) == GPIO_PIN_RESET) ? 1U : 0U,
       (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4) == GPIO_PIN_RESET) ? 1U : 0U,
       (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5) == GPIO_PIN_RESET) ? 1U : 0U
     };
     uint8_t i;
+
     for (i = 0; i < 3U; i++)
     {
       if (raw[i] == key_stable[i])
       {
         key_cnt[i] = 0;
       }
-      else if (++key_cnt[i] >= 20U) /* 连续 20ms 才认边沿，消抖 */
+      else if (++key_cnt[i] >= 20U)
       {
         key_cnt[i] = 0;
         key_stable[i] = raw[i];
@@ -171,11 +168,20 @@ void StartDefaultTask(void const * argument)
           }
           else if (i == 1U)
           {
+            /* 进速度前尝试对齐；失败则仍可进模式但 Uq 会被置 0 */
+            printf("Align...\r\n");
+            FOC_BeginAlign();
+            osDelay(800);
+            FOC_FinishAlign();
             FOC_SetMode(FOC_MODE_SPEED);
             printf("MODE speed\r\n");
           }
           else
           {
+            printf("Align...\r\n");
+            FOC_BeginAlign();
+            osDelay(800);
+            FOC_FinishAlign();
             FOC_SetMode(FOC_MODE_POSITION);
             printf("MODE hold position\r\n");
           }
@@ -183,27 +189,31 @@ void StartDefaultTask(void const * argument)
       }
     }
 
-    FOC_Step(0.001f); /* 与 osDelay(1) 对应，约 1kHz */
-
-    if (++print_div >= 300U)
-    {
-      print_div = 0;
-      printf("mode=%u | M0=%lu/%lu/%lu | M1=%lu/%lu/%lu\r\n",
-             (unsigned)FOC_GetMode(),
-             (unsigned long)__HAL_TIM_GET_COMPARE(&htim2, TIM_CHANNEL_1),
-             (unsigned long)__HAL_TIM_GET_COMPARE(&htim2, TIM_CHANNEL_2),
-             (unsigned long)__HAL_TIM_GET_COMPARE(&htim2, TIM_CHANNEL_3),
-             (unsigned long)__HAL_TIM_GET_COMPARE(&htim2, TIM_CHANNEL_4),
-             (unsigned long)__HAL_TIM_GET_COMPARE(&htim3, TIM_CHANNEL_1),
-             (unsigned long)__HAL_TIM_GET_COMPARE(&htim3, TIM_CHANNEL_2));
-    }
+    FOC_Step(0.001f);
     osDelay(1);
   }
-  /* USER CODE END StartDefaultTask */
 }
 
-/* Private application code --------------------------------------------------*/
-/* USER CODE BEGIN Application */
+void StartLogTask(void const * argument)
+{
+  (void)argument;
+
+  osDelay(200);
+
+  for (;;)
+  {
+    printf("mode=%u | ASok=%u/%u AS=%u/%u | Iok=%u/%u INA=%u/%u/%u/%u | Iq=%ld/%ld mA | Uq=%ld/%ld mV\r\n",
+           (unsigned)FOC_GetMode(),
+           (unsigned)FOC_GetAngleOk(0), (unsigned)FOC_GetAngleOk(1),
+           (unsigned)FOC_GetAngleRaw(0), (unsigned)FOC_GetAngleRaw(1),
+           (unsigned)FOC_GetCurrentOk(0), (unsigned)FOC_GetCurrentOk(1),
+           (unsigned)FOC_GetInaRaw(0), (unsigned)FOC_GetInaRaw(1),
+           (unsigned)FOC_GetInaRaw(2), (unsigned)FOC_GetInaRaw(3),
+           (long)(FOC_GetIq(0) * 1000.0f), (long)(FOC_GetIq(1) * 1000.0f),
+           (long)(FOC_GetUq(0) * 1000.0f), (long)(FOC_GetUq(1) * 1000.0f));
+
+    osDelay(300);
+  }
+}
 
 /* USER CODE END Application */
-

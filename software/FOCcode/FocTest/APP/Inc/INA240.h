@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 #include "adc.h"
+#include <stdint.h>
 
 /* INA240 OUT -> MCU ADC
  * PB1 -> ADC1_IN9
@@ -22,6 +23,13 @@ typedef enum {
 } INA240_Channel_t;
 
 void INA240_Init(void);
+
+/* 成功返回 1；失败返回 0，不改 *value */
+uint8_t INA240_ReadRawOk(INA240_Channel_t ch, uint16_t *value);
+
+/* ok[i]=1 表示该通道有效；失败通道保持 raw[i] 原值不变（调用前可先填旧值） */
+void INA240_ReadAllRawOk(uint16_t raw[INA240_CH_NUM], uint8_t ok[INA240_CH_NUM]);
+
 uint16_t INA240_ReadRaw(INA240_Channel_t ch);
 void INA240_ReadAllRaw(uint16_t raw[INA240_CH_NUM]);
 
