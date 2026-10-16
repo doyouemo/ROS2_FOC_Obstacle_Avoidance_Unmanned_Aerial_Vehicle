@@ -1,0 +1,13 @@
+# 上游第三方源码（浅克隆，可随时重新拉取，不入库）
+/betaflight/
+/betaflight-config/
+
+# 固件/Flash dump 与二进制（体积大，不入库）
+/dump/
+
+# 编译产物
+obj/
+*.hex
+*.bin
+*.elf
+*.uf2
