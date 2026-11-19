@@ -21,7 +21,10 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
-
+#define UART_RX_CAP 64U
+static volatile uint8_t s_rx[UART_RX_CAP];
+static volatile uint8_t s_rx_w = 0U;
+static volatile uint8_t s_rx_r = 0U;
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;
@@ -51,7 +54,7 @@ void MX_USART1_UART_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN USART1_Init 2 */
-
+  SET_BIT(USART1->CR1, USART_CR1_RXNEIE);
   /* USER CODE END USART1_Init 2 */
 
 }
@@ -84,7 +87,12 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* USER CODE BEGIN USART1_MspInit 1 */
-
+  GPIO_InitStruct.Pin = GPIO_PIN_10;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_NVIC_SetPriority(USART1_IRQn, 6, 0);
+  HAL_NVIC_EnableIRQ(USART1_IRQn);
   /* USER CODE END USART1_MspInit 1 */
   }
 }
@@ -113,6 +121,32 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 }
 
 /* USER CODE BEGIN 1 */
+void USART1_IRQHandler(void)
+{
+  uint32_t sr = USART1->SR;
 
+  if ((sr & (USART_SR_RXNE | USART_SR_ORE)) != 0U)
+  {
+    uint8_t b = (uint8_t)(USART1->DR & 0xFFU);
+    uint8_t next = (uint8_t)((s_rx_w + 1U) % UART_RX_CAP);
+
+    if (next != s_rx_r)
+    {
+      s_rx[s_rx_w] = b;
+      s_rx_w = next;
+    }
+  }
+}
+
+uint8_t USART1_RxPop(uint8_t *byte)
+{
+  if ((byte == NULL) || (s_rx_r == s_rx_w))
+  {
+    return 0U;
+  }
+  *byte = s_rx[s_rx_r];
+  s_rx_r = (uint8_t)((s_rx_r + 1U) % UART_RX_CAP);
+  return 1U;
+}
 /* USER CODE END 1 */
 

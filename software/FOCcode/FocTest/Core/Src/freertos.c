@@ -26,8 +26,9 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
 #include "INA240.h"
+#include "usart.h"
 #include "MotorPWM.h"
 #include "FOC.h"
 #include "AS5600.h"
@@ -123,22 +124,103 @@ void StartDefaultTask(void const * argument)
 
 /* USER CODE BEGIN Application */
 
+static uint8_t s_aligned = 0U;
+
+static void align_once(void)
+{
+  if (s_aligned != 0U)
+  {
+    return;
+  }
+  printf("Align...\r\n");
+  FOC_BeginAlign();
+  osDelay(800);
+  FOC_FinishAlign();
+  s_aligned = 1U;
+}
+
+static void foc_apply_speed_line(char *buf, uint8_t n)
+{
+  if (n == 0U)
+  {
+    return;
+  }
+  buf[n] = '\0';
+  FOC_SetSpeedRef(strtof(buf, NULL));
+  printf("VEL %ld mrad/s\r\n", (long)(FOC_GetSpeedRef() * 1000.0f));
+}
+
+static void foc_poll_speed_uart(void)
+{
+  static char buf[16];
+  static uint8_t n = 0U;
+  static uint8_t idle = 0U;
+  uint8_t raw;
+  uint8_t got = 0U;
+
+  while (USART1_RxPop(&raw) != 0U)
+  {
+    char ch = (char)raw;
+
+    got = 1U;
+    if ((ch == '\r') || (ch == '\n'))
+    {
+      foc_apply_speed_line(buf, n);
+      n = 0U;
+    }
+    else if ((n + 1U) < (uint8_t)sizeof(buf) &&
+             ((ch == '-') || (ch == '.') || ((ch >= '0') && (ch <= '9'))))
+    {
+      buf[n] = ch;
+      n++;
+    }
+    else
+    {
+      n = 0U;
+    }
+  }
+
+  if (got != 0U)
+  {
+    idle = 0U;
+  }
+  else if (n > 0U)
+  {
+    if (++idle >= 40U)
+    {
+      foc_apply_speed_line(buf, n);
+      n = 0U;
+      idle = 0U;
+    }
+  }
+}
+
+static void foc_dwt_init(void)
+{
+  CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+  DWT->CYCCNT = 0U;
+  DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+}
+
 void StartMotorTask(void const * argument)
 {
   uint8_t key_stable[3] = {1U, 1U, 1U};
   uint8_t key_cnt[3] = {0};
+  uint32_t last_cyc;
   (void)argument;
 
   INA240_Init();
   MotorPWM_Init();
   FOC_Init();
-  /* 默认 KEY1：不对齐、不加电压，只跑 Step 采数 + 日志 */
+  foc_dwt_init();
+  last_cyc = DWT->CYCCNT;
+  /* 默认 KEY1：不对齐、不加电压 */
   FOC_SetMode(FOC_MODE_STOP);
 
-  printf("\r\nDefault STOP (KEY1). Sensors logged; motor Uq=0.\r\n");
-  printf("KEY1 stop  KEY2 speed  KEY3 position (need good AS5600)\r\n");
-  printf("Full FOC: I->Clarke->Park | PI->Uq->InvPark->SVPWM\r\n");
-  printf("Bad reads ignored (hold last good / Uq=0).\r\n\r\n");
+  printf("\r\nDefault STOP (KEY1). Log off while stopped.\r\n");
+  printf("KEY1 stop  KEY2 speed  KEY3 position\r\n");
+  printf("UART speed rad/s, range %ld..%ld, default %ld\r\n\r\n",
+         (long)FOC_VEL_MIN, (long)FOC_VEL_MAX, (long)FOC_VEL_DEFAULT);
 
   for (;;)
   {
@@ -148,6 +230,8 @@ void StartMotorTask(void const * argument)
       (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5) == GPIO_PIN_RESET) ? 1U : 0U
     };
     uint8_t i;
+    uint32_t now;
+    float dt;
 
     for (i = 0; i < 3U; i++)
     {
@@ -168,51 +252,76 @@ void StartMotorTask(void const * argument)
           }
           else if (i == 1U)
           {
-            /* 进速度前尝试对齐；失败则仍可进模式但 Uq 会被置 0 */
-            printf("Align...\r\n");
-            FOC_BeginAlign();
-            osDelay(800);
-            FOC_FinishAlign();
+            align_once();
             FOC_SetMode(FOC_MODE_SPEED);
             printf("MODE speed\r\n");
           }
           else
           {
-            printf("Align...\r\n");
-            FOC_BeginAlign();
-            osDelay(800);
-            FOC_FinishAlign();
+            align_once();
             FOC_SetMode(FOC_MODE_POSITION);
             printf("MODE hold position\r\n");
           }
+          last_cyc = DWT->CYCCNT;
         }
       }
     }
 
-    FOC_Step(0.001f);
+    now = DWT->CYCCNT;
+    dt = (float)(now - last_cyc) / (float)SystemCoreClock;
+    last_cyc = now;
+    if ((dt < 0.0002f) || (dt > 0.05f))
+    {
+      dt = 0.001f;
+    }
+    FOC_Step(dt);
     osDelay(1);
   }
 }
 
 void StartLogTask(void const * argument)
 {
+  uint8_t wait = 0U;
   (void)argument;
 
   osDelay(200);
 
   for (;;)
   {
-    printf("mode=%u | ASok=%u/%u AS=%u/%u | Iok=%u/%u INA=%u/%u/%u/%u | Iq=%ld/%ld mA | Uq=%ld/%ld mV\r\n",
-           (unsigned)FOC_GetMode(),
-           (unsigned)FOC_GetAngleOk(0), (unsigned)FOC_GetAngleOk(1),
-           (unsigned)FOC_GetAngleRaw(0), (unsigned)FOC_GetAngleRaw(1),
-           (unsigned)FOC_GetCurrentOk(0), (unsigned)FOC_GetCurrentOk(1),
-           (unsigned)FOC_GetInaRaw(0), (unsigned)FOC_GetInaRaw(1),
-           (unsigned)FOC_GetInaRaw(2), (unsigned)FOC_GetInaRaw(3),
-           (long)(FOC_GetIq(0) * 1000.0f), (long)(FOC_GetIq(1) * 1000.0f),
-           (long)(FOC_GetUq(0) * 1000.0f), (long)(FOC_GetUq(1) * 1000.0f));
+    foc_poll_speed_uart();
+    if (FOC_GetMode() != FOC_MODE_STOP)
+    {
+      if (wait == 0U)
+      {
+        uint8_t axis = 0xFFU;
 
-    osDelay(300);
+        if (FOC_GetAngleOk(1) != 0U)
+        {
+          axis = 1U;
+        }
+        else if (FOC_GetAngleOk(0) != 0U)
+        {
+          axis = 0U;
+        }
+        if (axis != 0xFFU)
+        {
+          /* VOFA+ FireWater。这一拍读成功才打印。 */
+          printf("%u,%ld,%u,%ld,%ld\n",
+                 (unsigned)FOC_GetMode(),
+                 (long)(FOC_GetSpeedRef() * 1000.0f),
+                 (unsigned)FOC_GetAngleRaw(axis),
+                 (long)(FOC_GetUq(axis) * 1000.0f),
+                 (long)(FOC_GetIq(axis) * 1000.0f));
+        }
+      }
+      wait = (uint8_t)((wait + 1U) % 30U);
+    }
+    else
+    {
+      wait = 0U;
+    }
+
+    osDelay(10);
   }
 }
 

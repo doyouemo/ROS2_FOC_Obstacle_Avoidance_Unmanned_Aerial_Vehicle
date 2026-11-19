@@ -22,8 +22,15 @@ void FOC_InvPark(float d, float q, float theta, float *alpha, float *beta);
 void FOC_Init(void);
 void FOC_BeginAlign(void);
 void FOC_FinishAlign(void);
+/* 速度设定，机械 rad/s。串口写入会被夹在这个范围里。 */
+#define FOC_VEL_MIN      (-15.0f)
+#define FOC_VEL_MAX      ( 15.0f)
+#define FOC_VEL_DEFAULT  (  8.0f)
+
 void FOC_SetMode(FOC_Mode_t mode);
 FOC_Mode_t FOC_GetMode(void);
+void FOC_SetSpeedRef(float rad_s);
+float FOC_GetSpeedRef(void);
 void FOC_Step(float dt_s);
 
 /* 日志 / 读数状态：1=本拍该路有效 */

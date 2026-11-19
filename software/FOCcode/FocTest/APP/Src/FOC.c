@@ -16,8 +16,8 @@
 #define FOC_SHUNT_OHM   0.010f
 #define FOC_INA_GAIN    20.0f
 #define FOC_ADC_VREF    3.3f
-#define FOC_VEL_REF     8.0f
 #define FOC_ALIGN_UQ    2.5f
+#define FOC_POS_D       0.16f
 
 typedef struct {
   float p;
@@ -41,6 +41,8 @@ typedef struct {
   float ia;
   float ib;
   float uq;
+  float glitch_mech;
+  uint8_t glitch_arm;
 } FocAxis_t;
 
 static FOC_Mode_t s_mode = FOC_MODE_STOP;
@@ -48,6 +50,7 @@ static FocAxis_t s_ax[2];
 static FocPi_t s_pi_vel[2];
 static FocPi_t s_pi_pos[2];
 static float s_pos_ref[2];
+static float s_vel_ref = FOC_VEL_DEFAULT;
 static uint16_t s_ina_raw[INA240_CH_NUM];
 static uint8_t s_ina_ok[INA240_CH_NUM];
 
@@ -60,6 +63,16 @@ static float clampf(float x, float lo, float hi)
     return hi;
   }
   return x;
+}
+
+static float slew_toward(float prev, float target, float dt)
+{
+  float du = 60.0f * dt;
+
+  if (du < 0.02f) {
+    du = 0.02f;
+  }
+  return clampf(target, prev - du, prev + du);
 }
 
 static float wrap_pi2(float a)
@@ -160,28 +173,67 @@ static void update_axis(FocAxis_t *ax, uint8_t angle_ok, uint16_t raw,
   ax->angle_ok = angle_ok;
   if (angle_ok != 0U)
   {
+    uint8_t accept = 1U;
+
     mech = ((float)(raw & 0x0FFFU)) * (FOC_TWO_PI / 4096.0f);
     dmech = mech - ax->mech;
     if (ax->angle_valid != 0U)
     {
+      float max_step;
+      float k;
+
       if (dmech > M_PI) {
         dmech -= FOC_TWO_PI;
       } else if (dmech < -M_PI) {
         dmech += FOC_TWO_PI;
       }
-      ax->mech_unw += dmech;
-      ax->vel = (dt > 1.0e-6f) ? (dmech / dt) : 0.0f;
-      ax->vel_lpf += 0.05f * (ax->vel - ax->vel_lpf);
+      max_step = 25.0f * dt + 0.02f;
+      if ((dmech > max_step) || (dmech < -max_step))
+      {
+        float dconfirm = mech - ax->glitch_mech;
+
+        if (dconfirm > M_PI) {
+          dconfirm -= FOC_TWO_PI;
+        } else if (dconfirm < -M_PI) {
+          dconfirm += FOC_TWO_PI;
+        }
+        if ((ax->glitch_arm != 0U) &&
+            (dconfirm <= max_step) && (dconfirm >= -max_step))
+        {
+          ax->mech_unw += dmech;
+          ax->vel = 0.0f;
+          ax->mech = mech;
+          ax->raw = raw;
+          ax->glitch_arm = 0U;
+          accept = 0U;
+        }
+        else
+        {
+          ax->glitch_mech = mech;
+          ax->glitch_arm = 1U;
+          accept = 0U;
+        }
+      }
+      if (accept != 0U)
+      {
+        ax->glitch_arm = 0U;
+        ax->mech_unw += dmech;
+        ax->vel = (dt > 1.0e-6f) ? (dmech / dt) : 0.0f;
+        k = dt / (dt + 0.03f);
+        ax->vel_lpf += k * (ax->vel - ax->vel_lpf);
+        ax->mech = mech;
+        ax->raw = raw;
+      }
     }
     else
     {
       ax->mech_unw = mech;
       ax->vel = 0.0f;
       ax->vel_lpf = 0.0f;
+      ax->mech = mech;
+      ax->raw = raw;
+      ax->angle_valid = 1U;
     }
-    ax->mech = mech;
-    ax->raw = raw;
-    ax->angle_valid = 1U;
   }
 
   ax->current_ok = ((ia_ok != 0U) && (ib_ok != 0U)) ? 1U : 0U;
@@ -248,10 +300,10 @@ void FOC_Init(void)
     s_pi_vel[i].i = 0.40f;
     s_pi_vel[i].out_min = -4.0f;
     s_pi_vel[i].out_max = 4.0f;
-    s_pi_pos[i].p = 4.0f;
+    s_pi_pos[i].p = 1.2f;
     s_pi_pos[i].i = 0.0f;
-    s_pi_pos[i].out_min = -4.0f;
-    s_pi_pos[i].out_max = 4.0f;
+    s_pi_pos[i].out_min = -1.6f;
+    s_pi_pos[i].out_max = 1.6f;
     s_ax[i].angle_ok = 0U;
     s_ax[i].angle_valid = 0U;
     s_ax[i].current_ok = 0U;
@@ -279,6 +331,16 @@ void FOC_SetMode(FOC_Mode_t mode)
 FOC_Mode_t FOC_GetMode(void)
 {
   return s_mode;
+}
+
+void FOC_SetSpeedRef(float rad_s)
+{
+  s_vel_ref = clampf(rad_s, FOC_VEL_MIN, FOC_VEL_MAX);
+}
+
+float FOC_GetSpeedRef(void)
+{
+  return s_vel_ref;
 }
 
 float FOC_GetIq(uint8_t axis)
@@ -368,11 +430,11 @@ void FOC_Step(float dt_s)
   {
     if ((s_ax[0].angle_valid != 0U) && (s_ax[0].angle_ok != 0U))
     {
-      uq0 = pi_run(&s_pi_vel[0], FOC_VEL_REF - s_ax[0].vel_lpf, dt_s);
+      uq0 = pi_run(&s_pi_vel[0], s_vel_ref - s_ax[0].vel_lpf, dt_s);
     }
     if ((s_ax[1].angle_valid != 0U) && (s_ax[1].angle_ok != 0U))
     {
-      uq1 = pi_run(&s_pi_vel[1], FOC_VEL_REF - s_ax[1].vel_lpf, dt_s);
+      uq1 = pi_run(&s_pi_vel[1], s_vel_ref - s_ax[1].vel_lpf, dt_s);
     }
   }
   else
@@ -380,10 +442,16 @@ void FOC_Step(float dt_s)
     if ((s_ax[0].angle_valid != 0U) && (s_ax[0].angle_ok != 0U))
     {
       uq0 = pi_run(&s_pi_pos[0], s_pos_ref[0] - s_ax[0].mech_unw, dt_s);
+      uq0 -= FOC_POS_D * s_ax[0].vel_lpf;
+      uq0 = clampf(uq0, s_pi_pos[0].out_min, s_pi_pos[0].out_max);
+      uq0 = slew_toward(s_ax[0].uq, uq0, dt_s);
     }
     if ((s_ax[1].angle_valid != 0U) && (s_ax[1].angle_ok != 0U))
     {
       uq1 = pi_run(&s_pi_pos[1], s_pos_ref[1] - s_ax[1].mech_unw, dt_s);
+      uq1 -= FOC_POS_D * s_ax[1].vel_lpf;
+      uq1 = clampf(uq1, s_pi_pos[1].out_min, s_pi_pos[1].out_max);
+      uq1 = slew_toward(s_ax[1].uq, uq1, dt_s);
     }
   }
 
