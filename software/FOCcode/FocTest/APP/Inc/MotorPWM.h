@@ -17,15 +17,9 @@ typedef enum {
 } MotorId_t;
 
 void MotorPWM_Init(void);
-void MotorPWM_SetDuty(MotorId_t motor, float u, float v, float w);
-void MotorPWM_StopAll(void);
 
-/* Uα/Uβ 相对母线（pu），七段 SVPWM 写指定电机；GetSector 为最后一次扇区 1~6 */
+/* Uα/Uβ 相对母线（pu），七段 SVPWM 写指定电机 */
 void MotorPWM_SetVoltageAB(MotorId_t motor, float ualpha, float ubeta);
-uint8_t MotorPWM_GetSector(void);
-
-/* 静态电平：测 EG2133 后级。duty=1 三相拉高，duty=0 三相拉低 */
-void MotorPWM_M0_HoldDuty(float u, float v, float w);
 
 #ifdef __cplusplus
 }

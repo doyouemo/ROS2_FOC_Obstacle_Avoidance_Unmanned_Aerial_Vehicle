@@ -41,7 +41,8 @@ extern UART_HandleTypeDef huart1;
 void MX_USART1_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-uint8_t USART1_RxPop(uint8_t *byte);
+uint8_t USART1_RxPop(uint8_t *byte);          /* 非阻塞：无数据返回 0 */
+uint8_t USART1_WriteByte(uint8_t byte);       /* 非阻塞：进 TX 环缓，满返回 0 */
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

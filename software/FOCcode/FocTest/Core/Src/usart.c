@@ -21,10 +21,16 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
-#define UART_RX_CAP 64U
+#define UART_RX_CAP 128U
+#define UART_TX_CAP 512U
+
 static volatile uint8_t s_rx[UART_RX_CAP];
-static volatile uint8_t s_rx_w = 0U;
-static volatile uint8_t s_rx_r = 0U;
+static volatile uint16_t s_rx_w = 0U;
+static volatile uint16_t s_rx_r = 0U;
+
+static volatile uint8_t s_tx[UART_TX_CAP];
+static volatile uint16_t s_tx_w = 0U;
+static volatile uint16_t s_tx_r = 0U;
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;
@@ -128,7 +134,7 @@ void USART1_IRQHandler(void)
   if ((sr & (USART_SR_RXNE | USART_SR_ORE)) != 0U)
   {
     uint8_t b = (uint8_t)(USART1->DR & 0xFFU);
-    uint8_t next = (uint8_t)((s_rx_w + 1U) % UART_RX_CAP);
+    uint16_t next = (uint16_t)((s_rx_w + 1U) % UART_RX_CAP);
 
     if (next != s_rx_r)
     {
@@ -136,16 +142,72 @@ void USART1_IRQHandler(void)
       s_rx_w = next;
     }
   }
+
+  /* TXE：从环缓取一字节写出；空则关 TXE 中断 */
+  if (((sr & USART_SR_TXE) != 0U) &&
+      ((USART1->CR1 & USART_CR1_TXEIE) != 0U))
+  {
+    if (s_tx_r != s_tx_w)
+    {
+      USART1->DR = s_tx[s_tx_r];
+      s_tx_r = (uint16_t)((s_tx_r + 1U) % UART_TX_CAP);
+    }
+    else
+    {
+      CLEAR_BIT(USART1->CR1, USART_CR1_TXEIE);
+    }
+  }
 }
 
 uint8_t USART1_RxPop(uint8_t *byte)
 {
-  if ((byte == NULL) || (s_rx_r == s_rx_w))
+  uint8_t b;
+  uint32_t primask;
+
+  if (byte == NULL)
   {
     return 0U;
   }
-  *byte = s_rx[s_rx_r];
-  s_rx_r = (uint8_t)((s_rx_r + 1U) % UART_RX_CAP);
+
+  primask = __get_PRIMASK();
+  __disable_irq();
+  if (s_rx_r == s_rx_w)
+  {
+    if (primask == 0U) {
+      __enable_irq();
+    }
+    return 0U;
+  }
+  b = s_rx[s_rx_r];
+  s_rx_r = (uint16_t)((s_rx_r + 1U) % UART_RX_CAP);
+  if (primask == 0U) {
+    __enable_irq();
+  }
+  *byte = b;
+  return 1U;
+}
+
+uint8_t USART1_WriteByte(uint8_t byte)
+{
+  uint16_t next;
+  uint32_t primask;
+
+  primask = __get_PRIMASK();
+  __disable_irq();
+  next = (uint16_t)((s_tx_w + 1U) % UART_TX_CAP);
+  if (next == s_tx_r)
+  {
+    if (primask == 0U) {
+      __enable_irq();
+    }
+    return 0U; /* 满：直接丢，保持非阻塞 */
+  }
+  s_tx[s_tx_w] = byte;
+  s_tx_w = next;
+  SET_BIT(USART1->CR1, USART_CR1_TXEIE);
+  if (primask == 0U) {
+    __enable_irq();
+  }
   return 1U;
 }
 /* USER CODE END 1 */

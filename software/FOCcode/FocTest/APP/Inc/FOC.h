@@ -15,13 +15,13 @@ typedef enum {
 } FOC_Mode_t;
 
 void FOC_Clarke(float a, float b, float c, float *alpha, float *beta);
-void FOC_InvClarke(float alpha, float beta, float *a, float *b, float *c);
 void FOC_Park(float alpha, float beta, float theta, float *d, float *q);
 void FOC_InvPark(float d, float q, float theta, float *alpha, float *beta);
 
 void FOC_Init(void);
 void FOC_BeginAlign(void);
 void FOC_FinishAlign(void);
+
 /* 速度设定，机械 rad/s。串口写入会被夹在这个范围里。 */
 #define FOC_VEL_MIN      (-15.0f)
 #define FOC_VEL_MAX      ( 15.0f)
@@ -33,12 +33,10 @@ void FOC_SetSpeedRef(float rad_s);
 float FOC_GetSpeedRef(void);
 void FOC_Step(float dt_s);
 
-/* 日志 / 读数状态：1=本拍该路有效 */
+/* 日志用 */
 float FOC_GetIq(uint8_t axis);
 uint16_t FOC_GetAngleRaw(uint8_t axis);
-uint16_t FOC_GetInaRaw(uint8_t ch);
 uint8_t FOC_GetAngleOk(uint8_t axis);
-uint8_t FOC_GetCurrentOk(uint8_t axis); /* 该轴两相电流本拍都成功 */
 float FOC_GetUq(uint8_t axis);
 
 #ifdef __cplusplus

@@ -124,18 +124,18 @@ void StartDefaultTask(void const * argument)
 
 /* USER CODE BEGIN Application */
 
-static uint8_t s_aligned = 0U;
+static uint8_t s_aligned = 0U;           /* 1=本上电已对齐过，速度/位置共用 */
 
 static void align_once(void)
 {
   if (s_aligned != 0U)
   {
-    return;
+    return;                              /* 只对齐一次 */
   }
   printf("Align...\r\n");
-  FOC_BeginAlign();
-  osDelay(800);
-  FOC_FinishAlign();
+  FOC_BeginAlign();                      /* 固定电角度加 Uq，强拉转子 */
+  osDelay(800);                          /* 等转子停稳 */
+  FOC_FinishAlign();                     /* 读 AS5600，记 zero_el / pos_ref */
   s_aligned = 1U;
 }
 
@@ -146,7 +146,7 @@ static void foc_apply_speed_line(char *buf, uint8_t n)
     return;
   }
   buf[n] = '\0';
-  FOC_SetSpeedRef(strtof(buf, NULL));
+  FOC_SetSpeedRef(strtof(buf, NULL));    /* 串口数字→s_vel_target [rad/s] */
   printf("VEL %ld mrad/s\r\n", (long)(FOC_GetSpeedRef() * 1000.0f));
 }
 
@@ -158,14 +158,14 @@ static void foc_poll_speed_uart(void)
   uint8_t raw;
   uint8_t got = 0U;
 
-  while (USART1_RxPop(&raw) != 0U)
+  while (USART1_RxPop(&raw) != 0U)       /* 非阻塞：环缓有字节才读 */
   {
     char ch = (char)raw;
 
     got = 1U;
     if ((ch == '\r') || (ch == '\n'))
     {
-      foc_apply_speed_line(buf, n);
+      foc_apply_speed_line(buf, n);      /* 回车：提交速度 */
       n = 0U;
     }
     else if ((n + 1U) < (uint8_t)sizeof(buf) &&
@@ -176,7 +176,7 @@ static void foc_poll_speed_uart(void)
     }
     else
     {
-      n = 0U;
+      n = 0U;                            /* 非法字符：清空 */
     }
   }
 
@@ -186,7 +186,7 @@ static void foc_poll_speed_uart(void)
   }
   else if (n > 0U)
   {
-    if (++idle >= 40U)
+    if (++idle >= 40U)                   /* ~40ms 无新字节：也提交（无回车时） */
     {
       foc_apply_speed_line(buf, n);
       n = 0U;
@@ -209,13 +209,12 @@ void StartMotorTask(void const * argument)
   uint32_t last_cyc;
   (void)argument;
 
-  INA240_Init();
-  MotorPWM_Init();
-  FOC_Init();
-  foc_dwt_init();
+  INA240_Init();                         /* 电流 ADC */
+  MotorPWM_Init();                       /* 三相 PWM 定时器 */
+  FOC_Init();                            /* PI 增益、状态清零 */
+  foc_dwt_init();                        /* 用 DWT 算 FOC_Step 的 dt */
   last_cyc = DWT->CYCCNT;
-  /* 默认 KEY1：不对齐、不加电压 */
-  FOC_SetMode(FOC_MODE_STOP);
+  FOC_SetMode(FOC_MODE_STOP);            /* 上电默认无力矩 */
 
   printf("\r\nDefault STOP (KEY1). Log off while stopped.\r\n");
   printf("KEY1 stop  KEY2 speed  KEY3 position\r\n");
@@ -247,19 +246,19 @@ void StartMotorTask(void const * argument)
         {
           if (i == 0U)
           {
-            FOC_SetMode(FOC_MODE_STOP);
+            FOC_SetMode(FOC_MODE_STOP);   /* KEY1：停止 */
             printf("MODE stop\r\n");
           }
           else if (i == 1U)
           {
-            align_once();
-            FOC_SetMode(FOC_MODE_SPEED);
+            align_once();                /* KEY2：先对齐（仅首次） */
+            FOC_SetMode(FOC_MODE_SPEED); /* 再进速度环 */
             printf("MODE speed\r\n");
           }
           else
           {
-            align_once();
-            FOC_SetMode(FOC_MODE_POSITION);
+            align_once();                /* KEY3：先对齐（仅首次） */
+            FOC_SetMode(FOC_MODE_POSITION); /* 再进位置环 */
             printf("MODE hold position\r\n");
           }
           last_cyc = DWT->CYCCNT;
@@ -268,14 +267,15 @@ void StartMotorTask(void const * argument)
     }
 
     now = DWT->CYCCNT;
-    dt = (float)(now - last_cyc) / (float)SystemCoreClock;
+    dt = (float)(now - last_cyc) / (float)SystemCoreClock; /* 本拍真实耗时 */
     last_cyc = now;
     if ((dt < 0.0002f) || (dt > 0.05f))
     {
-      dt = 0.001f;
+      dt = 0.001f;                       /* 异常 dt 保护成 1ms */
     }
-    FOC_Step(dt);
-    osDelay(1);
+    foc_poll_speed_uart();               /* 非阻塞收串口改速 */
+    FOC_Step(dt);                        /* 一整拍 FOC：采样→环→PWM */
+    osDelay(1);                          /* ~1 kHz 外环 */
   }
 }
 
@@ -288,7 +288,6 @@ void StartLogTask(void const * argument)
 
   for (;;)
   {
-    foc_poll_speed_uart();
     if (FOC_GetMode() != FOC_MODE_STOP)
     {
       if (wait == 0U)

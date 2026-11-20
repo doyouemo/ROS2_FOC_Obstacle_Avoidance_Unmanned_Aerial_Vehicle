@@ -72,7 +72,8 @@ FILE __stdout;
 int fputc(int ch, FILE *f)
 {
   (void)f;
-  HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, 0xFFFF);
+  /* 非阻塞：进 TX 环缓，由 USART TXE 中断吐出；满则丢字节 */
+  (void)USART1_WriteByte((uint8_t)ch);
   return ch;
 }
 /* USER CODE END 0 */
